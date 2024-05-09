@@ -1,0 +1,369 @@
+$shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+
+html {
+  height: 100%;
+  width: 100%;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  --background: #EBEBEB;
+  --primary: #0052B4;
+  --secondary: #DD5A5A;
+  --green: #63B85D;
+  --text: #3E3E3E;
+
+  color: var(--text);
+  background: var(--background);
+  margin: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.logo {
+  width: 10rem;
+}
+
+.content {
+  flex: 1;
+  overflow: visible;
+  position: relative;
+  box-sizing: border-box;
+  max-width: 35rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.Votes {
+  padding: 1rem;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  gap: 1.2rem;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .swipe-card {
+    .swipe-card__container {
+      border-radius: 1.5rem;
+    }
+
+    .swipe-card__image-container {
+      display: none;
+    }
+
+    .swipe-card__content {
+      background: var(--primary);
+      height: 100%;
+      width: 100%;
+      color: white;
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: end;
+
+    .passer,
+    .pour,
+    .contre {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: .6rem 0rem 0.1rem 0rem;
+      text-transform: none;
+      font-weight: bold;
+      font-size: 1.125rem;
+      bottom: 1rem;
+
+      &:hover {
+        background-color: inherit;
+        opacity: .95;
+      }
+
+      &:hover,
+      & {
+        box-shadow: $shadow;
+      }
+
+      svg {
+        height: 2.4rem;
+        margin: .2rem;
+      }
+    }
+
+    .passer {
+      height: 2.5rem;
+      padding: 0 1rem;
+    }
+  }
+
+  .Stack {
+    flex: 1;
+    height: 70%;
+    width: 100%;
+    align-items: center;
+    justify-content: end;
+  }
+
+  .Card {
+    height: 2px;
+    padding: 1.2rem;
+    border-radius: 1.5rem !important;
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    box-sizing: border-box;
+
+    h2 {
+      font-size: 1.375rem;
+      margin: 0;
+      padding-bottom: 1rem;
+      border-bottom: #ffffff30 1px solid;
+    }
+
+    ul {
+      padding-left: 1rem;
+
+      li {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .more-info {
+      height: 2.5rem;
+
+      &:hover {
+        opacity: .9;
+      }
+    }
+  }
+
+  .progress {
+    background-color: white;
+    height: 1rem;
+    border-radius: 1rem;
+    width: 100%;
+    position: relative;
+    box-shadow: $shadow;
+
+    .bar {
+      background-color: var(--primary);
+      position: absolute;
+      transition: width 0.3s linear;
+      border-radius: 1rem;
+      display: block;
+      height: 1rem;
+      padding: 0;
+      margin: 0;
+    }
+  }
+}
+
+
+.Welcome {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+
+  .footer {
+    text-align: center;
+    color: #616161;
+
+    a:visited {
+      color: inherit;
+    }
+  }
+
+  .Card {
+    display: flex;
+    flex-direction: column;
+    color: white;
+
+    h2 {
+      text-align: center;
+      font-size: 1.625rem;
+    }
+
+    .top,
+    .bottom {
+      flex: 1;
+      border-radius: 1rem;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      svg {
+        padding: 1rem;
+      }
+    }
+
+    .top {
+      background-color: var(--primary);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .bottom {
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      background-color: var(--secondary);
+
+      .welcome-start {
+        color: white;
+        height: 3.25rem;
+        font-size: 1.25rem;
+        width: 100%;
+
+        &:hover {
+          opacity: .9;
+        }
+      }
+    }
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.Resultats {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem 0;
+
+  h2 {
+    margin: 1rem;
+  }
+
+  .MuiTabs-fixed {
+    border-bottom: 1px solid #EAEAEA;
+  }
+
+  .list {
+    padding: 1rem;
+    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+
+    .explanation {
+      font-size: 0.875rem;
+    }
+
+    .result {
+      display: flex;
+      background-color: #C2C2C2;
+      border-radius: 0.675rem;
+      height: 3.375rem;
+
+      img {
+        width: 3.375rem;
+        border-top-left-radius: 0.675rem;
+        border-bottom-left-radius: 0.675rem;
+      }
+
+      .progress {
+        height: 3.375rem;
+        border-radius: 1rem;
+        width: 100%;
+        position: relative;
+
+        .bar {
+          background-color: var(--green);
+          transition: width 0.3s linear;
+          position: absolute;
+          display: block;
+          height: 3.375rem;
+          padding: 0;
+          margin: 0;
+        }
+
+        .name {
+          left: 1rem;
+          color: white;
+          position: absolute;
+          display: flex;
+          flex-direction: column;
+          height: 3.375rem;
+          justify-content: center;
+
+          h4 {
+            margin: 0;
+            font-size: 1rem;
+          }
+
+          h5 {
+            margin: 0;
+            font-weight: normal;
+            font-size: 1rem;
+          }
+        }
+
+        .score {
+          color: white;
+          position: absolute;
+          right: 1rem;
+          line-height: 3.375rem;
+          font-weight: lighter;
+          font-size: 1.25rem;
+        }
+      }
+    }
+
+    .reset {
+      color: white;
+      height: 3rem;
+    }
+  }
+}
+
+.Navbar,
+.BottomNav {
+  box-shadow: $shadow;
+  z-index: 5;
+
+  .MuiBottomNavigationAction-root:hover {
+    opacity: .8;
+  }
+}
+
+.About {
+  .Card {
+    margin: 1rem;
+    background-color: white;
+    gap: 1rem;
+    border-radius: 1rem;
+    padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h2 {
+      margin-top: 2rem;
+    }
+  }
+}

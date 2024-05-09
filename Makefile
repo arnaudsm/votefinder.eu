@@ -2,6 +2,7 @@
 
 init:
 	cd data && yarn && node export_data.js
+	cd frontend && yarn
 
 dev: init
 	cd frontend && yarn dev

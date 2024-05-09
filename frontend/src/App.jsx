@@ -46,6 +46,8 @@ const shuffle = (arr) => {
 
 const votes = shuffle(Object.values(data.votes));
 
+const projectURL = "https://github.com/arnaudsm/votefinder.eu";
+
 const theme = createTheme({
   root: {
     color: "#3E3E3E",
@@ -252,7 +254,7 @@ const Welcome = ({ visible, onStart }) => (
     </div>
     <div className="footer">
       VoteFinder est un projet bénévole, <br />
-      <a href="">open-source</a>, et sans tracking.
+      <a href={projectURL}>open-source</a>, et sans tracking.
     </div>
   </div>
 );
@@ -338,6 +340,7 @@ const About = ({ visible }) => (
         variant="contained"
         size="large"
         disableElevation
+        href={projectURL}
       >
         contribuer au projet
       </Button>
@@ -366,7 +369,7 @@ function App() {
         <Resultats visible={tab == 1} />
         <About visible={tab == 2} />
       </div>
-      <BottomNav state={[tab, setTab]} />
+      {tab >= 0 && <BottomNav state={[tab, setTab]} />}
     </ThemeProvider>
   );
 }

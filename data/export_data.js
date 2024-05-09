@@ -1,0 +1,55 @@
+import fs from "fs";
+import zlib from "zlib";
+import readline from "readline";
+
+const output = { votes: {} };
+
+let voteStats = readline.createInterface({
+  input: fs.createReadStream("vote_stats.json.gz").pipe(zlib.createGunzip()),
+});
+const all_votes = {};
+for await (const line of voteStats) {
+  const vote = JSON.parse(line);
+  all_votes[vote.vote_id] = vote;
+}
+
+for (const file of fs.readdirSync("votes")) {
+  const vote_id = file.split(".")[0];
+  if (!vote_id) throw new ErrorEvent("Missing vote_id");
+  const [title, subtitle_1, subtitle_2, url, extra] = fs
+    .readFileSync(`votes/${file}`, "utf-8")
+    .split("\n");
+
+  if (extra) throw new Error("Ligne de trop dans " + file);
+
+  if ([title, subtitle_1, subtitle_2, url].some((x) => x != x.trim()))
+    throw new Error("Espaces en trop dans " + file);
+
+  if ([title, subtitle_1, subtitle_2, url].some((x) => !x))
+    throw new Error("Champ manquant dans " + file);
+
+  if (title.length < 25) throw new Error("Titre trop court dans " + file);
+  if (title.length > 150) throw new Error("Titre trop long dans " + file);
+
+  if (subtitle_1.length < 25)
+    throw new Error("subtitle_1 trop court dans " + file);
+  if (subtitle_1.length > 250)
+    throw new Error("subtitle_1 trop long dans " + file);
+
+  if (subtitle_2.length < 25)
+    throw new Error("subtitle_2 trop court dans " + file);
+  if (subtitle_2.length > 250)
+    throw new Error("subtitle_2 trop long dans " + file);
+
+  if (!all_votes[vote_id]) throw new Error("vote_id introuvable");
+  output["votes"][vote_id] = {
+    ...all_votes[vote_id],
+    title,
+    subtitle_1,
+    subtitle_2,
+    url,
+  };
+}
+
+fs.writeFileSync("../frontend/src/data.json", JSON.stringify(output));
+console.log("✅ Données exportées");

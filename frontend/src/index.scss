@@ -36,7 +36,8 @@ body {
 
 .content {
   flex: 1;
-  overflow: visible;
+  overflow-y: visible;
+  overflow-x: inherit;
   position: relative;
   box-sizing: border-box;
   max-width: 35rem;

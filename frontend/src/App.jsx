@@ -254,7 +254,10 @@ const Welcome = ({ visible, onStart }) => (
     </div>
     <div className="footer">
       VoteFinder est un projet bénévole, <br />
-      <a href={projectURL}>open-source</a>, et sans tracking.
+      <a href={projectURL} target="_blank">
+        open-source
+      </a>
+      , et sans tracking.
     </div>
   </div>
 );
@@ -341,6 +344,7 @@ const About = ({ visible }) => (
         size="large"
         disableElevation
         href={projectURL}
+        target="_blank"
       >
         contribuer au projet
       </Button>

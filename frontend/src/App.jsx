@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext, createContext } from "react";
 import "./index.scss";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -12,11 +12,10 @@ import {
   Button,
   createTheme,
   Stack,
-  Paper,
   ThemeProvider,
-  Box,
   Tab,
   Tabs,
+  Modal,
 } from "@mui/material";
 import {
   HowToVote,
@@ -25,15 +24,17 @@ import {
   Add,
   Delete,
   Email,
-  Newspaper,
   GitHub,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import Pour from "./icons/pour.svg";
 import EuLogo from "./icons/eu.svg";
 import Contre from "./icons/contre.svg";
+import Trophy from "./icons/trophy.svg";
 import { CardSwiper } from "react-card-swiper";
 import data from "./data";
+
+const minVotes = 20;
 
 const shuffle = (arr) => {
   const newArr = arr.slice();
@@ -44,7 +45,7 @@ const shuffle = (arr) => {
   return newArr;
 };
 
-const votes = shuffle(Object.values(data.votes));
+const vote_ids = shuffle(Object.keys(data.votes));
 
 const projectURL = "https://github.com/arnaudsm/votefinder.eu";
 
@@ -80,34 +81,32 @@ const theme = createTheme({
   },
 });
 
-const Content = () => (
-  <div className="Card">
-    <div className="top">
-      <h2>{"Réduire l'écart de salaire entre les femmes et les hommes"}</h2>
-      <ul>
-        <li>
-          {
-            "Fixer des objectifs pour réduire l'écart de rémunération d'ici 2025"
-          }
-        </li>
-        <li>
-          {
-            "Introduire des mesures de transparence des salaires et protéger les droits des travailleurs à temps partiel"
-          }
-        </li>
-      </ul>
+const Content = ({ vote_id }) => {
+  const vote = data.votes[vote_id];
+
+  return (
+    <div className="Card">
+      <div className="top">
+        <h2>{vote.title}</h2>
+        <ul>
+          <li>{vote.subtitle_1}</li>
+          <li>{vote.subtitle_2}</li>
+        </ul>
+      </div>
+      <Button
+        startIcon={<Add />}
+        className="more-info"
+        color="lightBlue"
+        variant="contained"
+        disableElevation
+        target="_blank"
+        href={vote.url}
+      >
+        PLUS D’INFOS
+      </Button>
     </div>
-    <Button
-      startIcon={<Add />}
-      className="more-info"
-      color="lightBlue"
-      variant="contained"
-      disableElevation
-    >
-      PLUS D’INFOS
-    </Button>
-  </div>
-);
+  );
+};
 
 function BottomNav({ state: [tab, setTab] }) {
   return (
@@ -115,9 +114,7 @@ function BottomNav({ state: [tab, setTab] }) {
       className="BottomNav"
       showLabels
       value={tab}
-      onChange={(event, newValue) => {
-        setTab(newValue);
-      }}
+      onChange={(event, newValue) => setTab(newValue)}
     >
       {[
         { key: "votes", label: "Votes", icon: <HowToVote /> },
@@ -130,40 +127,58 @@ function BottomNav({ state: [tab, setTab] }) {
   );
 }
 
-const Votes = ({ visible }) => {
-  const handleDismiss = (el, meta, id, action, operation) => {
-    console.log({ el, meta, id, action, operation });
-  };
-
-  const handleFinish = (status) => {
-    console.log(status);
-  };
-
-  const handleEnter = (el, meta, id) => {
-    console.log(el, meta, id);
-  };
-
-  const mockData = [
-    {
-      id: "88552078",
-      content: <Content />,
-    },
-    {
-      id: "fc7e0bd4",
-      content: <Content />,
-    },
-  ];
+const NoVotesLeft = () => {
+  const context = useContext(Context);
 
   return (
+    <div className="NoVotesLeft">
+      <div> Félicitations, vous avez voté toutes les lois !</div>
+      <Button
+        className="welcome-start"
+        variant="contained"
+        disableElevation
+        size="large"
+        onClick={() => {
+          context.setTab(1);
+          context.setResultPopup(false);
+        }}
+      >
+        voir mes résultats
+      </Button>
+    </div>
+  );
+};
+
+const Votes = ({ visible }) => {
+  const context = useContext(Context);
+  const [id, setId] = useState();
+  const [unseen_vote_ids] = useState(
+    vote_ids.filter((vote_id) => !context.choices[vote_id]),
+  );
+  const handleDismiss = (el, meta, id, action, operation) => {
+    if (operation !== "swipe") return;
+    context.choose({ vote_id: id, type: action == "like" ? "+" : "-" });
+  };
+  const handleEnter = (el, meta, id) => setId(id);
+  const data = unseen_vote_ids.map((vote_id) => ({
+    id: vote_id,
+    content: <Content vote_id={vote_id} />,
+  }));
+  const progress = Math.floor(
+    (Object.keys(context.choices).length / minVotes) * 100,
+  );
+  return (
     <div className={`Votes ${visible ? "" : "hide"}`}>
-      <div className="progress">
-        <div className="bar" style={{ width: "54%" }}></div>
-      </div>
+      {progress < 100 && (
+        <div className="progress">
+          <div className="bar" style={{ width: `${progress}%` }}></div>
+        </div>
+      )}
       <Stack className="Stack">
         <CardSwiper
-          data={mockData}
+          data={data}
           onEnter={handleEnter}
-          onFinish={handleFinish}
+          onFinish={() => null}
           onDismiss={handleDismiss}
           dislikeButton={<div />}
           likeButton={<div />}
@@ -176,7 +191,7 @@ const Votes = ({ visible }) => {
             bgDislike: "#DD5A5A",
             textColor: "white",
           }}
-          emptyState={<div>LOREM IPSUM</div>}
+          emptyState={<NoVotesLeft />}
         />
       </Stack>
       <div className="actions">
@@ -186,6 +201,7 @@ const Votes = ({ visible }) => {
           color="secondary"
           className="contre"
           onClick={() => {
+            context.choose({ vote_id: id, type: "-" });
             document
               .getElementById("swipe-card__dislike-action-button")
               ?.click();
@@ -200,6 +216,7 @@ const Votes = ({ visible }) => {
           color="secondary"
           className="passer"
           onClick={() => {
+            context.choose({ vote_id: id, type: "0" });
             document
               .getElementById("swipe-card__dislike-action-button")
               ?.click();
@@ -213,6 +230,7 @@ const Votes = ({ visible }) => {
           color="secondary"
           className="pour"
           onClick={() => {
+            context.choose({ vote_id: id, type: "+" });
             document.getElementById("swipe-card__like-action-button")?.click();
           }}
         >
@@ -232,38 +250,48 @@ const Navbar = () => (
   </AppBar>
 );
 
-const Welcome = ({ visible, onStart }) => (
-  <div className={`Welcome ${visible ? "" : "hide"}`}>
-    <div className="Card">
-      <div className="top">
-        <EuLogo />
-        <h2>Juge les textes votés au Parlement Européen ✉️</h2>
+const Welcome = () => {
+  const context = useContext(Context);
+
+  return (
+    <>
+      <div className="Welcome">
+        <div className="Card">
+          <div className="top">
+            <EuLogo />
+            <h2>Juge les textes votés au Parlement Européen ✉️</h2>
+          </div>
+          <div className="bottom">
+            <h2>Et découvre quelle liste vote comme toi ✌️</h2>
+            <Button
+              className="welcome-start"
+              color="lightRed"
+              variant="contained"
+              disableElevation
+              onClick={() => {
+                localStorage.setItem("started", "y");
+                context.setStarted(true);
+              }}
+            >
+              Commencer
+            </Button>
+          </div>
+        </div>
+        <div className="footer">
+          VoteFinder est un projet bénévole, <br />
+          <a href={projectURL} target="_blank">
+            open-source
+          </a>
+          , et sans tracking.
+        </div>
       </div>
-      <div className="bottom">
-        <h2>Et découvre quelle liste vote comme toi ✌️</h2>
-        <Button
-          className="welcome-start"
-          color="lightRed"
-          variant="contained"
-          disableElevation
-          onClick={onStart}
-        >
-          Commencer
-        </Button>
-      </div>
-    </div>
-    <div className="footer">
-      VoteFinder est un projet bénévole, <br />
-      <a href={projectURL} target="_blank">
-        open-source
-      </a>
-      , et sans tracking.
-    </div>
-  </div>
-);
+    </>
+  );
+};
 
 const Resultats = ({ visible }) => {
   const [value, setValue] = useState(0);
+  const context = useContext(Context);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -298,6 +326,13 @@ const Resultats = ({ visible }) => {
           startIcon={<Delete />}
           color="primary"
           variant="contained"
+          onClick={() => {
+            if (!confirm("Voulez vous supprimer toutes vos données locales?"))
+              return;
+            context.setChoices({});
+            context.acceptWelcome(false);
+            context.setTab(0);
+          }}
           disableElevation
         >
           réinitialiser mes votes
@@ -324,7 +359,7 @@ const About = ({ visible }) => (
       >
         nous contacter
       </Button>
-      <Button
+      {/* <Button
         startIcon={<Newspaper />}
         color="primary"
         variant="contained"
@@ -332,7 +367,7 @@ const About = ({ visible }) => (
         disableElevation
       >
         communiqué de presse
-      </Button>
+      </Button> */}
       <p>
         Vous voulez corriger une erreur ou rajouter un texte de loi? Rejoignez
         notre GitHub !
@@ -360,20 +395,104 @@ const About = ({ visible }) => (
   </div>
 );
 
+const Context = createContext({});
+
+const ResultsModal = () => {
+  const context = useContext(Context);
+  return (
+    <Modal
+      open={context.resultPopup}
+      onClose={() => context.setResultPopup(false)}
+      className="ResultsModal"
+    >
+      <div className="content">
+        <h2>Tu as voté assez de lois pour découvrir tes résultats !</h2>
+        <Trophy />
+        <div className="actions">
+          <Button
+            className="welcome-start"
+            variant="white"
+            disableElevation
+            size="large"
+            onClick={() => {
+              context.setResultPopup(false);
+            }}
+          >
+            Continuer à voter
+          </Button>
+          <Button
+            className="welcome-start"
+            color="lightRed"
+            variant="contained"
+            disableElevation
+            size="large"
+            onClick={() => {
+              context.setTab(1);
+              context.setResultPopup(false);
+            }}
+          >
+            Mes résultats
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+};
 function App() {
-  const [tab, setTab] = useState(-1);
+  const [tab, setTab] = useState(0);
+  const [resultPopup, setResultPopup] = useState(false);
+  const [choices, setChoices] = useState(() => {
+    const json = localStorage.getItem("votes");
+    if (!json) return {};
+    return JSON.parse(json);
+  });
+  const [started, setStarted] = useState(
+    localStorage.getItem("started") == "y",
+  );
+  const choose = ({ vote_id, type }) => {
+    setChoices((prevChoices) => {
+      const newChoices = { ...prevChoices, [vote_id]: type };
+      localStorage.setItem("votes", JSON.stringify(newChoices));
+      if (Object.keys(newChoices).length == minVotes) setResultPopup(true);
+      return newChoices;
+    });
+  };
+  const acceptWelcome = (value) => {
+    setStarted(value);
+    localStorage.setItem("started", value ? "y" : "");
+  };
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar />
-      {/* Switch with CSS to keep the state and rendering */}
-      <div className="content">
-        <Welcome visible={tab == -1} onStart={() => setTab(0)} />
-        <Votes visible={tab == 0} />
-        <Resultats visible={tab == 1} />
-        <About visible={tab == 2} />
-      </div>
-      {tab >= 0 && <BottomNav state={[tab, setTab]} />}
+      <Context.Provider
+        value={{
+          tab,
+          setTab,
+          choices,
+          choose,
+          setChoices,
+          setStarted,
+          acceptWelcome,
+          resultPopup,
+          setResultPopup,
+        }}
+      >
+        <Navbar />
+        {/* Switch with CSS to keep the state and rendering */}
+        <div className="content">
+          {started ? (
+            <>
+              <Votes visible={tab == 0} />
+              <Resultats visible={tab == 1} />
+              <About visible={tab == 2} />
+            </>
+          ) : (
+            <Welcome />
+          )}
+        </div>
+        <ResultsModal />
+        {started && <BottomNav state={[tab, setTab]} />}
+      </Context.Provider>
     </ThemeProvider>
   );
 }

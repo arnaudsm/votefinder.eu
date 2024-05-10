@@ -59,6 +59,11 @@ body {
       border-radius: 1.5rem;
     }
 
+    .swipe-card__ribbon-like,
+    .swipe-card__ribbon-dislike {
+      border-radius: 1rem;
+    }
+
     .swipe-card__image-container {
       display: none;
     }

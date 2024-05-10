@@ -1,3 +1,4 @@
+import data from "./data";
 import { useState, useEffect, useMemo, useContext, createContext } from "react";
 import "./index.scss";
 import "@fontsource/roboto/300.css";
@@ -32,7 +33,7 @@ import EuLogo from "./icons/eu.svg";
 import Contre from "./icons/contre.svg";
 import Trophy from "./icons/trophy.svg";
 import { CardSwiper } from "react-card-swiper";
-import data from "./data";
+import ConfettiExplosion from "react-confetti-explosion";
 
 const minVotes = 20;
 
@@ -407,6 +408,7 @@ const ResultsModal = () => {
     >
       <div className="content">
         <h2>Tu as voté assez de lois pour découvrir tes résultats !</h2>
+        <ConfettiExplosion zIndex="1400" />
         <Trophy />
         <div className="actions">
           <Button

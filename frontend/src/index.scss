@@ -36,13 +36,16 @@ body {
 
 .content {
   flex: 1;
-  overflow: visible;
-  overflow-x: auto;
   position: relative;
   box-sizing: border-box;
-  max-width: 35rem;
   width: 100%;
-  margin: 0 auto;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  &>* {
+    margin: 0 auto;
+    max-width: 35rem;
+  }
 }
 
 .Votes {
@@ -96,8 +99,8 @@ body {
       bottom: 1rem;
 
       &:hover {
-        background-color: inherit;
-        opacity: .95;
+        background-color: white;
+        opacity: .7;
       }
 
       &:hover,

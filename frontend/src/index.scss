@@ -310,6 +310,14 @@ body {
         width: 100%;
         position: relative;
 
+
+        @keyframes progress-bar {
+          0% {
+            width: 0%;
+          }
+        }
+
+
         .bar {
           background-color: var(--green);
           transition: width 0.3s ease-in-out;
@@ -318,6 +326,8 @@ body {
           height: 3.375rem;
           padding: 0;
           margin: 0;
+          animation: progress-bar 0.3s;
+          animation-timing-function: ease-in-out;
         }
 
         .name {

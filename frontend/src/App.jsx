@@ -450,6 +450,7 @@ const About = ({ visible }) => (
         color="primary"
         variant="contained"
         size="large"
+        href="mailto:contact@votefinder.eu"
         disableElevation
       >
         nous contacter

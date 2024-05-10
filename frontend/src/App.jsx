@@ -35,7 +35,7 @@ import Trophy from "./icons/trophy.svg";
 import { CardSwiper } from "react-card-swiper";
 import ConfettiExplosion from "react-confetti-explosion";
 
-const minVotes = 0;
+const minVotes = 5;
 const recommendedVotes = 20;
 
 const shuffle = (arr) => {

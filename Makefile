@@ -5,6 +5,9 @@ init:
 	(cd data && yarn && node export_data.js)
 	(cd frontend && yarn)
 
+lint: init
+	(cd frontend && yarn lint)
+
 dev: init
 	(cd frontend && yarn dev)
 

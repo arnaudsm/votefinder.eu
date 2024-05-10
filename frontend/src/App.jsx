@@ -1,5 +1,5 @@
 import data from "./data";
-import { useState, useEffect, useMemo, useContext, createContext } from "react";
+import { useState, useMemo, useContext, createContext } from "react";
 import "./index.scss";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";

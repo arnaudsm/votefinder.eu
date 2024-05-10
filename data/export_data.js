@@ -2,6 +2,11 @@ import fs from "fs";
 import zlib from "zlib";
 import readline from "readline";
 
+/*
+Certaines données hardcodées ici viennent de
+https://data.europarl.europa.eu/en/developer-corner/opendata-api
+*/
+
 const getVotes = async () => {
   const output = {};
 
@@ -105,6 +110,8 @@ const lists = {
   },
 };
 
+// Plusieurs partis peuvent concourir sous la même liste
+// Attention, les partis changent souvent de nom avec les années
 const org_to_list = {
   6442: "new-0", // Renaissance                        -> Besoin d’Europe
   5582: "new-6", // Régions et Peuples Solidaires      -> Europe Territoires Écologie
@@ -135,6 +142,11 @@ const groups = {
   6259: "The Left",
 };
 
+/* 
+o: Organisation=parti 
+g: Groupe politique européen
+l: Nom du député
+*/
 const deputes = {
   5565: { o: ["5441"], g: ["5153"], l: "Brice HORTEFEUX" },
   24505: { o: ["6049"], g: ["6259"], l: "Emmanuel MAUREL" },

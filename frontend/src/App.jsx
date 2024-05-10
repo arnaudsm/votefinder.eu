@@ -11,7 +11,6 @@ import {
   AppBar,
   Toolbar,
   Button,
-  createTheme,
   Stack,
   ThemeProvider,
   Tab,
@@ -34,9 +33,12 @@ import Contre from "./icons/contre.svg";
 import Trophy from "./icons/trophy.svg";
 import { CardSwiper } from "react-card-swiper";
 import ConfettiExplosion from "react-confetti-explosion";
+import { calculateResults } from "./rank";
+import { theme } from "./theme";
 
 const minVotes = 5;
 const recommendedVotes = 20;
+const projectURL = "https://github.com/arnaudsm/votefinder.eu";
 
 const shuffle = (arr) => {
   const newArr = arr.slice();
@@ -48,40 +50,6 @@ const shuffle = (arr) => {
 };
 
 const vote_ids = shuffle(Object.keys(data.votes));
-
-const projectURL = "https://github.com/arnaudsm/votefinder.eu";
-
-const theme = createTheme({
-  root: {
-    color: "#3E3E3E",
-  },
-  palette: {
-    primary: {
-      main: "#0052B4",
-    },
-    secondary: {
-      main: "#FFFFFF",
-    },
-    lightBlue: {
-      main: "#6697D2",
-    },
-    lightRed: {
-      main: "#E78B8B",
-    },
-  },
-  shadows: [
-    "0px 0px 0px 0px rgba(0, 0, 0, 0.15)",
-    "0px 0px 2px 0px rgba(0, 0, 0, 0.15)",
-    "0px 0px 4px 0px rgba(0, 0, 0, 0.15)",
-    "0px 0px 6px 0px rgba(0, 0, 0, 0.15)",
-    "0px 0px 8px 0px rgba(0, 0, 0, 0.15)",
-    "0px 0px 10px 0px rgba(0, 0, 0, 0.15)",
-    "0px 0px 12px 0px rgba(0, 0, 0, 0.15)",
-  ],
-  shape: {
-    borderRadius: 14,
-  },
-});
 
 const Content = ({ vote_id }) => {
   const vote = data.votes[vote_id];
@@ -291,71 +259,18 @@ const Welcome = () => {
   );
 };
 
-const calculateResults = (choices) => {
-  let groups = Object.fromEntries(
-    Object.keys(data.groups).map((group) => [group, { "+": 0, "-": 0 }]),
-  );
-  let deputes = Object.fromEntries(
-    Object.keys(data.deputes).map((group) => [group, { "+": 0, "-": 0 }]),
-  );
-  let lists = Object.fromEntries(
-    Object.keys(data.lists).map((group) => [group, { "+": 0, "-": 0 }]),
-  );
-
-  const apply = (depute_id, choice) => {
-    if (!(depute_id in deputes)) return;
-    for (const group_id of data.deputes[depute_id].g)
-      groups[group_id][choice ? "+" : "-"] += 1;
-    lists[data.org_to_list[data.deputes[depute_id].o[0]]][choice ? "+" : "-"] +=
-      1;
-    deputes[depute_id][choice ? "+" : "-"] += 1;
-  };
-
-  for (const [vote_id, choice] of Object.entries(choices)) {
-    if (choice == "+") {
-      for (const depute_id of data.votes[vote_id].votes?.["0"] || [])
-        apply(depute_id, false);
-      for (const depute_id of data.votes[vote_id].votes?.["-"] || [])
-        apply(depute_id, false);
-      for (const depute_id of data.votes[vote_id].votes?.["+"] || [])
-        apply(depute_id, true);
-    } else if (choice == "-") {
-      for (const depute_id of data.votes[vote_id].votes?.["-"] || [])
-        apply(depute_id, true);
-      for (const depute_id of data.votes[vote_id].votes?.["+"] || [])
-        apply(depute_id, false);
-    }
-  }
-  const rank = (x) => {
-    let output = [];
-    for (const key of Object.keys(x)) {
-      output.push([key, x[key]["+"] / (x[key]["-"] + x[key]["+"])]);
-    }
-    return output.sort((a, b) => b[1] - a[1]);
-  };
-  return {
-    lists: rank(lists),
-    deputes: rank(deputes),
-    groups: rank(groups),
-  };
-};
-
 const Resultats = ({ visible }) => {
   const [tab, setTab] = useState(0);
   const context = useContext(Context);
-  // todo usememo
   const results = useMemo(
     () => calculateResults(context.choices),
     [context.choices],
   );
-  console.log(results);
 
-  const handleChange = (event, newValue) => {
-    setTab(newValue);
-  };
+  const handleChange = (event, newValue) => setTab(newValue);
   const tabs = [
     {
-      label: "Partis",
+      label: "Listes",
       text: "Pourcentage d’accord avec les nouvelles listes",
       resultAccess: (result) => result.lists,
       imgAccess: (id) => `/lists/${id}.jpg`,
@@ -535,6 +450,7 @@ const ResultsModal = () => {
     </Modal>
   );
 };
+
 function App() {
   const [tab, setTab] = useState(0);
   const [resultPopup, setResultPopup] = useState(false);

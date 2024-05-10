@@ -7,7 +7,8 @@ Et découvre quelle liste vote comme toi ✌️
 
 ## Ambition
 
-Une application web de statistiques sur les votes du parlement européenne.
+Une application web de statistiques sur les votes du parlement européen.
+
 Porte sur le 9ème mandat et les députés Français pour l'instant.
 
 ## Dépendances

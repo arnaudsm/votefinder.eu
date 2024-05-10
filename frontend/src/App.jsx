@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useContext, createContext } from "react";
 import "./index.scss";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -44,7 +44,7 @@ const shuffle = (arr) => {
   return newArr;
 };
 
-const votes = shuffle(Object.values(data.votes));
+const vote_ids = shuffle(Object.keys(data.votes));
 
 const projectURL = "https://github.com/arnaudsm/votefinder.eu";
 
@@ -80,34 +80,32 @@ const theme = createTheme({
   },
 });
 
-const Content = () => (
-  <div className="Card">
-    <div className="top">
-      <h2>{"Réduire l'écart de salaire entre les femmes et les hommes"}</h2>
-      <ul>
-        <li>
-          {
-            "Fixer des objectifs pour réduire l'écart de rémunération d'ici 2025"
-          }
-        </li>
-        <li>
-          {
-            "Introduire des mesures de transparence des salaires et protéger les droits des travailleurs à temps partiel"
-          }
-        </li>
-      </ul>
+const Content = ({ vote_id }) => {
+  const vote = data.votes[vote_id];
+
+  return (
+    <div className="Card">
+      <div className="top">
+        <h2>{vote.title}</h2>
+        <ul>
+          <li>{vote.subtitle_1}</li>
+          <li>{vote.subtitle_2}</li>
+        </ul>
+      </div>
+      <Button
+        startIcon={<Add />}
+        className="more-info"
+        color="lightBlue"
+        variant="contained"
+        disableElevation
+        target="_blank"
+        href={vote.url}
+      >
+        PLUS D’INFOS
+      </Button>
     </div>
-    <Button
-      startIcon={<Add />}
-      className="more-info"
-      color="lightBlue"
-      variant="contained"
-      disableElevation
-    >
-      PLUS D’INFOS
-    </Button>
-  </div>
-);
+  );
+};
 
 function BottomNav({ state: [tab, setTab] }) {
   return (
@@ -131,6 +129,7 @@ function BottomNav({ state: [tab, setTab] }) {
 }
 
 const Votes = ({ visible }) => {
+  const context = useContext(Context);
   const handleDismiss = (el, meta, id, action, operation) => {
     console.log({ el, meta, id, action, operation });
   };
@@ -143,25 +142,26 @@ const Votes = ({ visible }) => {
     console.log(el, meta, id);
   };
 
-  const mockData = [
-    {
-      id: "88552078",
-      content: <Content />,
-    },
-    {
-      id: "fc7e0bd4",
-      content: <Content />,
-    },
-  ];
+  const data = vote_ids.map((vote_id) => ({
+    id: vote_id,
+    content: <Content vote_id={vote_id} />,
+  }));
+  const progress = Math.floor((Object.keys(context.choices).length / 30) * 100);
+  console.log("RENDER");
 
   return (
     <div className={`Votes ${visible ? "" : "hide"}`}>
       <div className="progress">
-        <div className="bar" style={{ width: "54%" }}></div>
+        <div
+          className="bar"
+          style={{
+            width: `${progress}%`,
+          }}
+        ></div>
       </div>
       <Stack className="Stack">
         <CardSwiper
-          data={mockData}
+          data={data}
           onEnter={handleEnter}
           onFinish={handleFinish}
           onDismiss={handleDismiss}
@@ -232,35 +232,41 @@ const Navbar = () => (
   </AppBar>
 );
 
-const Welcome = ({ visible, onStart }) => (
-  <div className={`Welcome ${visible ? "" : "hide"}`}>
-    <div className="Card">
-      <div className="top">
-        <EuLogo />
-        <h2>Juge les textes votés au Parlement Européen ✉️</h2>
+const Welcome = ({ visible }) => {
+  const context = useContext(Context);
+
+  return (
+    <>
+      <div className={`Welcome ${visible ? "" : "hide"}`}>
+        <div className="Card">
+          <div className="top">
+            <EuLogo />
+            <h2>Juge les textes votés au Parlement Européen ✉️</h2>
+          </div>
+          <div className="bottom">
+            <h2>Et découvre quelle liste vote comme toi ✌️</h2>
+            <Button
+              className="welcome-start"
+              color="lightRed"
+              variant="contained"
+              disableElevation
+              onClick={() => context.setTab(0)}
+            >
+              Commencer
+            </Button>
+          </div>
+        </div>
+        <div className="footer">
+          VoteFinder est un projet bénévole, <br />
+          <a href={projectURL} target="_blank">
+            open-source
+          </a>
+          , et sans tracking.
+        </div>
       </div>
-      <div className="bottom">
-        <h2>Et découvre quelle liste vote comme toi ✌️</h2>
-        <Button
-          className="welcome-start"
-          color="lightRed"
-          variant="contained"
-          disableElevation
-          onClick={onStart}
-        >
-          Commencer
-        </Button>
-      </div>
-    </div>
-    <div className="footer">
-      VoteFinder est un projet bénévole, <br />
-      <a href={projectURL} target="_blank">
-        open-source
-      </a>
-      , et sans tracking.
-    </div>
-  </div>
-);
+    </>
+  );
+};
 
 const Resultats = ({ visible }) => {
   const [value, setValue] = useState(0);
@@ -360,20 +366,28 @@ const About = ({ visible }) => (
   </div>
 );
 
+const Context = createContext({});
+
 function App() {
   const [tab, setTab] = useState(-1);
+  const [choices, setChoices] = useState({ a: 1 });
+  const choose = ({ vote_id, type }) => {
+    setChoices((prevChoices) => ({ ...prevChoices, [vote_id]: type }));
+  };
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar />
-      {/* Switch with CSS to keep the state and rendering */}
-      <div className="content">
-        <Welcome visible={tab == -1} onStart={() => setTab(0)} />
-        <Votes visible={tab == 0} />
-        <Resultats visible={tab == 1} />
-        <About visible={tab == 2} />
-      </div>
-      {tab >= 0 && <BottomNav state={[tab, setTab]} />}
+      <Context.Provider value={{ tab, setTab, choices, choose }}>
+        <Navbar />
+        {/* Switch with CSS to keep the state and rendering */}
+        <div className="content">
+          <Welcome visible={tab == -1} />
+          <Votes visible={tab == 0} />
+          <Resultats visible={tab == 1} />
+          <About visible={tab == 2} />
+        </div>
+        {tab >= 0 && <BottomNav state={[tab, setTab]} />}
+      </Context.Provider>
     </ThemeProvider>
   );
 }

@@ -41,12 +41,18 @@ for (const file of fs.readdirSync("votes")) {
   if (subtitle_2.length > 250)
     throw new Error("subtitle_2 trop long dans " + file);
 
+  if (subtitle_1.slice(0, 2) != "- ")
+    throw new Error("subtitle_1 manque un tiret dans" + file);
+
+  if (subtitle_2.slice(0, 2) != "- ")
+    throw new Error("subtitle_2 manque un tiret dans" + file);
+
   if (!all_votes[vote_id]) throw new Error("vote_id introuvable");
   output["votes"][vote_id] = {
     ...all_votes[vote_id],
     title,
-    subtitle_1,
-    subtitle_2,
+    subtitle_1: subtitle_1.slice(2),
+    subtitle_2: subtitle_2.slice(2),
     url,
   };
 }

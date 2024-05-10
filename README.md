@@ -26,9 +26,6 @@ Porte sur le 9ème mandat et les députés Français pour l'instant.
 - Cartes
 - Localstorage votes
 - Calcul résultats
-- Nom de Domaine
-- CloudFlare
-- CI Github Actions
 
 - Taux d'absentéisme
 - Détail des résultats par vote

@@ -22,11 +22,12 @@ Porte sur le 9ème mandat et les députés Français pour l'instant.
 - `make build` pour compiler l'application
 
 ## Todo
-- Shared controller
-- Cartes
-- Localstorage votes
-- Calcul résultats
+- Résultats
+- Contact Email
+- CI
 
-- Taux d'absentéisme
+- Communiqué de presse
+- Réseaux Sociaux
 - Détail des résultats par vote
+- Taux d'absentéisme
 - Etendre aux autres pays d'europe

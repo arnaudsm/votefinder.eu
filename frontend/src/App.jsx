@@ -12,11 +12,10 @@ import {
   Button,
   createTheme,
   Stack,
-  Paper,
   ThemeProvider,
-  Box,
   Tab,
   Tabs,
+  Modal,
 } from "@mui/material";
 import {
   HowToVote,
@@ -25,15 +24,17 @@ import {
   Add,
   Delete,
   Email,
-  Newspaper,
   GitHub,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import Pour from "./icons/pour.svg";
 import EuLogo from "./icons/eu.svg";
 import Contre from "./icons/contre.svg";
+import Trophy from "./icons/trophy.svg";
 import { CardSwiper } from "react-card-swiper";
 import data from "./data";
+
+const minVotes = 20;
 
 const shuffle = (arr) => {
   const newArr = arr.slice();
@@ -113,9 +114,7 @@ function BottomNav({ state: [tab, setTab] }) {
       className="BottomNav"
       showLabels
       value={tab}
-      onChange={(event, newValue) => {
-        setTab(newValue);
-      }}
+      onChange={(event, newValue) => setTab(newValue)}
     >
       {[
         { key: "votes", label: "Votes", icon: <HowToVote /> },
@@ -128,42 +127,58 @@ function BottomNav({ state: [tab, setTab] }) {
   );
 }
 
+const NoVotesLeft = () => {
+  const context = useContext(Context);
+
+  return (
+    <div className="NoVotesLeft">
+      <div> Félicitations, vous avez voté toutes les lois !</div>
+      <Button
+        className="welcome-start"
+        variant="contained"
+        disableElevation
+        size="large"
+        onClick={() => {
+          context.setTab(1);
+          context.setResultPopup(false);
+        }}
+      >
+        voir mes résultats
+      </Button>
+    </div>
+  );
+};
+
 const Votes = ({ visible }) => {
   const context = useContext(Context);
+  const [id, setId] = useState();
+  const [unseen_vote_ids] = useState(
+    vote_ids.filter((vote_id) => !context.choices[vote_id]),
+  );
   const handleDismiss = (el, meta, id, action, operation) => {
-    console.log({ el, meta, id, action, operation });
+    if (operation !== "swipe") return;
+    context.choose({ vote_id: id, type: action == "like" ? "+" : "-" });
   };
-
-  const handleFinish = (status) => {
-    console.log(status);
-  };
-
-  const handleEnter = (el, meta, id) => {
-    console.log(el, meta, id);
-  };
-
-  const data = vote_ids.map((vote_id) => ({
+  const handleEnter = (el, meta, id) => setId(id);
+  const data = unseen_vote_ids.map((vote_id) => ({
     id: vote_id,
     content: <Content vote_id={vote_id} />,
   }));
-  const progress = Math.floor((Object.keys(context.choices).length / 30) * 100);
-  console.log("RENDER");
-
+  const progress = Math.floor(
+    (Object.keys(context.choices).length / minVotes) * 100,
+  );
   return (
     <div className={`Votes ${visible ? "" : "hide"}`}>
-      <div className="progress">
-        <div
-          className="bar"
-          style={{
-            width: `${progress}%`,
-          }}
-        ></div>
-      </div>
+      {progress < 100 && (
+        <div className="progress">
+          <div className="bar" style={{ width: `${progress}%` }}></div>
+        </div>
+      )}
       <Stack className="Stack">
         <CardSwiper
           data={data}
           onEnter={handleEnter}
-          onFinish={handleFinish}
+          onFinish={() => null}
           onDismiss={handleDismiss}
           dislikeButton={<div />}
           likeButton={<div />}
@@ -176,7 +191,7 @@ const Votes = ({ visible }) => {
             bgDislike: "#DD5A5A",
             textColor: "white",
           }}
-          emptyState={<div>LOREM IPSUM</div>}
+          emptyState={<NoVotesLeft />}
         />
       </Stack>
       <div className="actions">
@@ -186,6 +201,7 @@ const Votes = ({ visible }) => {
           color="secondary"
           className="contre"
           onClick={() => {
+            context.choose({ vote_id: id, type: "-" });
             document
               .getElementById("swipe-card__dislike-action-button")
               ?.click();
@@ -200,6 +216,7 @@ const Votes = ({ visible }) => {
           color="secondary"
           className="passer"
           onClick={() => {
+            context.choose({ vote_id: id, type: "0" });
             document
               .getElementById("swipe-card__dislike-action-button")
               ?.click();
@@ -213,6 +230,7 @@ const Votes = ({ visible }) => {
           color="secondary"
           className="pour"
           onClick={() => {
+            context.choose({ vote_id: id, type: "+" });
             document.getElementById("swipe-card__like-action-button")?.click();
           }}
         >
@@ -232,12 +250,12 @@ const Navbar = () => (
   </AppBar>
 );
 
-const Welcome = ({ visible }) => {
+const Welcome = () => {
   const context = useContext(Context);
 
   return (
     <>
-      <div className={`Welcome ${visible ? "" : "hide"}`}>
+      <div className="Welcome">
         <div className="Card">
           <div className="top">
             <EuLogo />
@@ -250,7 +268,10 @@ const Welcome = ({ visible }) => {
               color="lightRed"
               variant="contained"
               disableElevation
-              onClick={() => context.setTab(0)}
+              onClick={() => {
+                localStorage.setItem("started", "y");
+                context.setStarted(true);
+              }}
             >
               Commencer
             </Button>
@@ -270,6 +291,7 @@ const Welcome = ({ visible }) => {
 
 const Resultats = ({ visible }) => {
   const [value, setValue] = useState(0);
+  const context = useContext(Context);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -304,6 +326,13 @@ const Resultats = ({ visible }) => {
           startIcon={<Delete />}
           color="primary"
           variant="contained"
+          onClick={() => {
+            if (!confirm("Voulez vous supprimer toutes vos données locales?"))
+              return;
+            context.setChoices({});
+            context.acceptWelcome(false);
+            context.setTab(0);
+          }}
           disableElevation
         >
           réinitialiser mes votes
@@ -330,7 +359,7 @@ const About = ({ visible }) => (
       >
         nous contacter
       </Button>
-      <Button
+      {/* <Button
         startIcon={<Newspaper />}
         color="primary"
         variant="contained"
@@ -338,7 +367,7 @@ const About = ({ visible }) => (
         disableElevation
       >
         communiqué de presse
-      </Button>
+      </Button> */}
       <p>
         Vous voulez corriger une erreur ou rajouter un texte de loi? Rejoignez
         notre GitHub !
@@ -368,25 +397,101 @@ const About = ({ visible }) => (
 
 const Context = createContext({});
 
+const ResultsModal = () => {
+  const context = useContext(Context);
+  return (
+    <Modal
+      open={context.resultPopup}
+      onClose={() => context.setResultPopup(false)}
+      className="ResultsModal"
+    >
+      <div className="content">
+        <h2>Tu as voté assez de lois pour découvrir tes résultats !</h2>
+        <Trophy />
+        <div className="actions">
+          <Button
+            className="welcome-start"
+            variant="white"
+            disableElevation
+            size="large"
+            onClick={() => {
+              context.setResultPopup(false);
+            }}
+          >
+            Continuer à voter
+          </Button>
+          <Button
+            className="welcome-start"
+            color="lightRed"
+            variant="contained"
+            disableElevation
+            size="large"
+            onClick={() => {
+              context.setTab(1);
+              context.setResultPopup(false);
+            }}
+          >
+            Mes résultats
+          </Button>
+        </div>
+      </div>
+    </Modal>
+  );
+};
 function App() {
-  const [tab, setTab] = useState(-1);
-  const [choices, setChoices] = useState({ a: 1 });
+  const [tab, setTab] = useState(0);
+  const [resultPopup, setResultPopup] = useState(false);
+  const [choices, setChoices] = useState(() => {
+    const json = localStorage.getItem("votes");
+    if (!json) return {};
+    return JSON.parse(json);
+  });
+  const [started, setStarted] = useState(
+    localStorage.getItem("started") == "y",
+  );
   const choose = ({ vote_id, type }) => {
-    setChoices((prevChoices) => ({ ...prevChoices, [vote_id]: type }));
+    setChoices((prevChoices) => {
+      const newChoices = { ...prevChoices, [vote_id]: type };
+      localStorage.setItem("votes", JSON.stringify(newChoices));
+      if (Object.keys(newChoices).length == minVotes) setResultPopup(true);
+      return newChoices;
+    });
+  };
+  const acceptWelcome = (value) => {
+    setStarted(value);
+    localStorage.setItem("started", value ? "y" : "");
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Context.Provider value={{ tab, setTab, choices, choose }}>
+      <Context.Provider
+        value={{
+          tab,
+          setTab,
+          choices,
+          choose,
+          setChoices,
+          setStarted,
+          acceptWelcome,
+          resultPopup,
+          setResultPopup,
+        }}
+      >
         <Navbar />
         {/* Switch with CSS to keep the state and rendering */}
         <div className="content">
-          <Welcome visible={tab == -1} />
-          <Votes visible={tab == 0} />
-          <Resultats visible={tab == 1} />
-          <About visible={tab == 2} />
+          {started ? (
+            <>
+              <Votes visible={tab == 0} />
+              <Resultats visible={tab == 1} />
+              <About visible={tab == 2} />
+            </>
+          ) : (
+            <Welcome />
+          )}
         </div>
-        {tab >= 0 && <BottomNav state={[tab, setTab]} />}
+        <ResultsModal />
+        {started && <BottomNav state={[tab, setTab]} />}
       </Context.Provider>
     </ThemeProvider>
   );

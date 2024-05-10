@@ -270,7 +270,7 @@ const Resultats = ({ visible }) => {
   const handleChange = (event, newValue) => setTab(newValue);
   const tabs = [
     {
-      label: "Partis",
+      label: "Listes",
       text: "Pourcentage d’accord avec les nouvelles listes",
       resultAccess: (result) => result.lists,
       imgAccess: (id) => `/lists/${id}.jpg`,

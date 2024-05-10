@@ -266,6 +266,9 @@ body {
   width: 100%;
   box-sizing: border-box;
   padding: 1rem 0;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  margin-bottom: 1rem;
 
   h2 {
     margin: 1rem;
@@ -400,6 +403,7 @@ body {
 
     h2 {
       margin-top: 2rem;
+      font-size: 1.75rem;
     }
   }
 }

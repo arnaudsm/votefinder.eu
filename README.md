@@ -26,7 +26,7 @@ Porte sur le 9ème mandat et les députés Français pour l'instant.
 ## Contribuer
 
 Les contribution techniques sont les bienvenues, mais aussi les non-techniques.
-VoteFinder ne comporte qu'une centaine de lois résumées pour l'instant. N'hésitez pas à rajouter le votre !
+VoteFinder ne comporte qu'une centaine de lois résumées pour l'instant. N'hésitez pas à rajouter la votre !
 
 Notre ligne éditoriale sur les textes est la suivante
 - Préférer les votes de texte entier, le vote final de préférence.

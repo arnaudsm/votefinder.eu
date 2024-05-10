@@ -22,10 +22,7 @@ Porte sur le 9ème mandat et les députés Français pour l'instant.
 - `make build` pour compiler l'application
 
 ## Todo
-- Résultats
-- Contact Email
 - CI
-
 - Communiqué de presse
 - Réseaux Sociaux
 - Détail des résultats par vote

@@ -1,3 +1,4 @@
+import data from "./data";
 import { useState, useEffect, useMemo, useContext, createContext } from "react";
 import "./index.scss";
 import "@fontsource/roboto/300.css";
@@ -32,9 +33,10 @@ import EuLogo from "./icons/eu.svg";
 import Contre from "./icons/contre.svg";
 import Trophy from "./icons/trophy.svg";
 import { CardSwiper } from "react-card-swiper";
-import data from "./data";
+import ConfettiExplosion from "react-confetti-explosion";
 
-const minVotes = 20;
+const minVotes = 0;
+const recommendedVotes = 20;
 
 const shuffle = (arr) => {
   const newArr = arr.slice();
@@ -165,7 +167,7 @@ const Votes = ({ visible }) => {
     content: <Content vote_id={vote_id} />,
   }));
   const progress = Math.floor(
-    (Object.keys(context.choices).length / minVotes) * 100,
+    (Object.keys(context.choices).length / recommendedVotes) * 100,
   );
   return (
     <div className={`Votes ${visible ? "" : "hide"}`}>
@@ -289,55 +291,148 @@ const Welcome = () => {
   );
 };
 
+const calculateResults = (choices) => {
+  let groups = Object.fromEntries(
+    Object.keys(data.groups).map((group) => [group, { "+": 0, "-": 0 }]),
+  );
+  let deputes = Object.fromEntries(
+    Object.keys(data.deputes).map((group) => [group, { "+": 0, "-": 0 }]),
+  );
+  let lists = Object.fromEntries(
+    Object.keys(data.lists).map((group) => [group, { "+": 0, "-": 0 }]),
+  );
+
+  const apply = (depute_id, choice) => {
+    if (!(depute_id in deputes)) return;
+    for (const group_id of data.deputes[depute_id].g)
+      groups[group_id][choice ? "+" : "-"] += 1;
+    lists[data.org_to_list[data.deputes[depute_id].o[0]]][choice ? "+" : "-"] +=
+      1;
+    deputes[depute_id][choice ? "+" : "-"] += 1;
+  };
+
+  for (const [vote_id, choice] of Object.entries(choices)) {
+    if (choice == "+") {
+      for (const depute_id of data.votes[vote_id].votes?.["0"] || [])
+        apply(depute_id, false);
+      for (const depute_id of data.votes[vote_id].votes?.["-"] || [])
+        apply(depute_id, false);
+      for (const depute_id of data.votes[vote_id].votes?.["+"] || [])
+        apply(depute_id, true);
+    } else if (choice == "-") {
+      for (const depute_id of data.votes[vote_id].votes?.["-"] || [])
+        apply(depute_id, true);
+      for (const depute_id of data.votes[vote_id].votes?.["+"] || [])
+        apply(depute_id, false);
+    }
+  }
+  const rank = (x) => {
+    let output = [];
+    for (const key of Object.keys(x)) {
+      output.push([key, x[key]["+"] / (x[key]["-"] + x[key]["+"])]);
+    }
+    return output.sort((a, b) => b[1] - a[1]);
+  };
+  return {
+    lists: rank(lists),
+    deputes: rank(deputes),
+    groups: rank(groups),
+  };
+};
+
 const Resultats = ({ visible }) => {
-  const [value, setValue] = useState(0);
+  const [tab, setTab] = useState(0);
   const context = useContext(Context);
+  // todo usememo
+  const results = useMemo(
+    () => calculateResults(context.choices),
+    [context.choices],
+  );
+  console.log(results);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setTab(newValue);
   };
+  const tabs = [
+    {
+      label: "Partis",
+      text: "Pourcentage d’accord avec les nouvelles listes",
+      resultAccess: (result) => result.lists,
+      imgAccess: (id) => `/lists/${id}.jpg`,
+      labelAccess: (id) => data.lists[id].label,
+      subtitleAccess: (id) => data.lists[id].leader,
+    },
+    {
+      label: "Groupes",
+      text: "Pourcentage d’accord avec les groupes européens",
+      resultAccess: (result) => result.groups,
+      imgAccess: (id) => `/orgs/${id}.svg`,
+      labelAccess: (id) => data.groups[id],
+    },
+    {
+      label: "Députés",
+      text: "Pourcentage d’accord avec les député sortants",
+      resultAccess: (result) => result.deputes,
+      imgAccess: (id) => `/deputes/${id}.jpg`,
+      labelAccess: (id) => data.deputes[id].l,
+    },
+  ];
 
   return (
     <div className={`Resultats ${visible ? "" : "hide"}`}>
       <h2>🏆 Mes Résultats</h2>
-      <Tabs value={value} onChange={handleChange} variant="fullWidth">
-        <Tab label="Partis" />
-        <Tab label="Groupes" />
-        <Tab label="Députés" />
+      <Tabs value={tab} onChange={handleChange} variant="fullWidth">
+        {tabs.map((type) => (
+          <Tab label={type.label} key={type.label} />
+        ))}
       </Tabs>
-
-      <div className="list">
-        <div className="explanation">
-          Pourcentage d’accord avec les listes sortantes
+      {Object.keys(context.choices).length < minVotes ? (
+        <div className="list">
+          Réponds à plus de {minVotes} questions pour voir tes résultats!
         </div>
-        <div className="result">
-          <img src="https://picsum.photos/100/100" alt="" />
-          <div className="progress">
-            <div className="bar" style={{ width: "54%" }}></div>
-            <div className="name">
-              <h4>Besoin d’Europe</h4>
-              <h5>Valérie Hayer</h5>
+      ) : (
+        <div className="list">
+          <div className="explanation">{tabs[tab].text}</div>
+          {tabs[tab].resultAccess(results).map(([id, approval]) => (
+            <div className="result" key={id}>
+              <img
+                src={tabs[tab].imgAccess(id)}
+                alt={tabs[tab].labelAccess(id)}
+              />
+              <div className="progress">
+                <div
+                  className="bar"
+                  style={{ width: `${Math.floor(approval * 100)}%` }}
+                ></div>
+                <div className="name">
+                  <h4>{tabs[tab].labelAccess(id)}</h4>
+                  <h5>
+                    {tabs[tab]?.subtitleAccess && tabs[tab]?.subtitleAccess(id)}
+                  </h5>
+                </div>
+                <div className="score">{`${Math.floor(approval * 100)}%`}</div>
+              </div>
             </div>
-            <div className="score">71%</div>
-          </div>
+          ))}
+
+          <Button
+            className="reset"
+            startIcon={<Delete />}
+            color="primary"
+            variant="contained"
+            onClick={() => {
+              if (!confirm("Voulez vous supprimer toutes vos données locales?"))
+                return;
+              context.setChoices({});
+              context.acceptWelcome(false);
+              context.setTab(0);
+            }}
+            disableElevation
+          >
+            réinitialiser mes votes
+          </Button>
         </div>
-        <Button
-          className="reset"
-          startIcon={<Delete />}
-          color="primary"
-          variant="contained"
-          onClick={() => {
-            if (!confirm("Voulez vous supprimer toutes vos données locales?"))
-              return;
-            context.setChoices({});
-            context.acceptWelcome(false);
-            context.setTab(0);
-          }}
-          disableElevation
-        >
-          réinitialiser mes votes
-        </Button>
-      </div>
+      )}
     </div>
   );
 };
@@ -355,6 +450,7 @@ const About = ({ visible }) => (
         color="primary"
         variant="contained"
         size="large"
+        href="mailto:contact@votefinder.eu"
         disableElevation
       >
         nous contacter
@@ -407,6 +503,7 @@ const ResultsModal = () => {
     >
       <div className="content">
         <h2>Tu as voté assez de lois pour découvrir tes résultats !</h2>
+        <ConfettiExplosion zIndex="1400" />
         <Trophy />
         <div className="actions">
           <Button
@@ -453,7 +550,8 @@ function App() {
     setChoices((prevChoices) => {
       const newChoices = { ...prevChoices, [vote_id]: type };
       localStorage.setItem("votes", JSON.stringify(newChoices));
-      if (Object.keys(newChoices).length == minVotes) setResultPopup(true);
+      if (Object.keys(newChoices).length == recommendedVotes)
+        setResultPopup(true);
       return newChoices;
     });
   };

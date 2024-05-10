@@ -20,6 +20,7 @@
     "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-card-swiper": "^1.1.25",
+    "react-confetti-explosion": "^2.1.2",
     "react-dom": "^18.2.0",
     "sass": "^1.77.0",
     "vite-plugin-svgr": "^4.2.0"

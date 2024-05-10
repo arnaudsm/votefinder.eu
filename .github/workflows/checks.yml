@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout
+        uses: actions/checkout@latest
 
-      - uses: actions/setup-node
+      - uses: actions/setup-node@latest
         with:
           node-version: 18
           cache: "yarn"

@@ -343,7 +343,7 @@ const ResultsParVote = () => {
 
   return (
     <div className="ResultsParVote">
-      {Object.entries(context.choices).map(([vote_id, choice]) => (
+      {Object.keys(context.choices).map((vote_id) => (
         <Accordion
           slotProps={{ transition: { unmountOnExit: true } }}
           key={vote_id}

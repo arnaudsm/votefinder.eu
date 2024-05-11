@@ -294,7 +294,7 @@ const VoteCard = ({ vote_id }) => {
       </Button>
       <div className="results">
         {Object.entries(calculateVote(vote.votes))
-          .filter(([id, results]) => !Number.isNaN(results["-%"]))
+          .filter(([, results]) => !Number.isNaN(results["-%"]))
           .map(([id, results]) => {
             const meta = tab.getMeta(id);
             return (
@@ -462,7 +462,7 @@ const Resultats = ({ visible }) => {
     () => calculateResults(context.choices),
     [context.choices],
   );
-
+  const minVotesReached = Object.keys(context.choices).length < minVotes;
   const handleChange = (event, newValue) => setTab(newValue);
 
   return (
@@ -470,7 +470,7 @@ const Resultats = ({ visible }) => {
       <div className="header">
         <h2>🏆 Mes Résultats</h2>
 
-        {navigator.canShare && (
+        {minVotesReached && navigator.canShare && (
           <Button
             startIcon={<Share />}
             color="primary"
@@ -490,7 +490,7 @@ const Resultats = ({ visible }) => {
       </Tabs>
       {tab == 3 ? (
         <ResultsParVote />
-      ) : Object.keys(context.choices).length < minVotes ? (
+      ) : minVotesReached ? (
         <div className="list">
           Réponds à plus de {minVotes} questions pour voir tes résultats!
         </div>

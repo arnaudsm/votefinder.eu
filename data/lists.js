@@ -1,73 +1,5 @@
-import fs from "fs";
-import zlib from "zlib";
-import readline from "readline";
-
-/*
-Certaines données hardcodées ici viennent de
-https://data.europarl.europa.eu/en/developer-corner/opendata-api
-*/
-
-const getVotes = async () => {
-  const output = {};
-
-  let voteStats = readline.createInterface({
-    input: fs.createReadStream("vote_stats.json.gz").pipe(zlib.createGunzip()),
-  });
-  const all_votes = {};
-  for await (const line of voteStats) {
-    const vote = JSON.parse(line);
-    all_votes[vote.vote_id] = vote;
-  }
-
-  for (const file of fs.readdirSync("votes")) {
-    const vote_id = file.split(".")[0];
-    if (!vote_id) throw new ErrorEvent("Missing vote_id");
-    const [title, subtitle_1, subtitle_2, url, extra] = fs
-      .readFileSync(`votes/${file}`, "utf-8")
-      .split("\n");
-
-    if (extra) throw new Error("Ligne de trop dans " + file);
-
-    if ([title, subtitle_1, subtitle_2, url].some((x) => x != x.trim()))
-      throw new Error("Espaces en trop dans " + file);
-
-    if ([title, subtitle_1, subtitle_2, url].some((x) => !x))
-      throw new Error("Champ manquant dans " + file);
-
-    if (title.length < 25) throw new Error("Titre trop court dans " + file);
-    if (title.length > 150) throw new Error("Titre trop long dans " + file);
-
-    if (subtitle_1.length < 25)
-      throw new Error("subtitle_1 trop court dans " + file);
-    if (subtitle_1.length > 250)
-      throw new Error("subtitle_1 trop long dans " + file);
-
-    if (subtitle_2.length < 25)
-      throw new Error("subtitle_2 trop court dans " + file);
-    if (subtitle_2.length > 250)
-      throw new Error("subtitle_2 trop long dans " + file);
-
-    if (subtitle_1.slice(0, 2) != "- ")
-      throw new Error("subtitle_1 manque un tiret dans" + file);
-
-    if (subtitle_2.slice(0, 2) != "- ")
-      throw new Error("subtitle_2 manque un tiret dans" + file);
-
-    if (!all_votes[vote_id]) throw new Error("vote_id introuvable");
-    output[vote_id] = {
-      ...all_votes[vote_id],
-      title,
-      subtitle_1: subtitle_1.slice(2),
-      subtitle_2: subtitle_2.slice(2),
-      url,
-    };
-  }
-  return output;
-};
-
-const votes = await getVotes();
-
-const lists = {
+// Source : https://data.europarl.europa.eu/en/developer-corner/opendata-api
+export const lists = {
   "new-0": {
     label: "Besoin d’Europe",
     leader: "Valérie Hayer",
@@ -267,10 +199,9 @@ const lists = {
     program_url: "",
   },
 };
-
 // Plusieurs partis peuvent concourir sous la même liste
 // Attention, les partis changent souvent de nom avec les années
-const org_to_list = {
+export const org_to_list = {
   6442: "new-0", // Renaissance                        -> Besoin d’Europe
   5582: "new-6", // Régions et Peuples Solidaires      -> Europe Territoires Écologie
   6413: "new-9", // Reconquête!                        -> La France fière
@@ -290,7 +221,7 @@ const org_to_list = {
   5225: "new-2", // Europe Écologie                    -> Europe Écologie
 };
 
-const groups = {
+export const groups = {
   5148: {
     label: "Conservateurs et Réformistes Européens",
     url: "https://fr.wikipedia.org/wiki/Conservateurs_et_r%C3%A9formistes_europ%C3%A9ens",
@@ -322,11 +253,14 @@ const groups = {
 };
 
 /* 
+Députés français sortants (ep-9)
+
 o: Organisation=parti 
 g: Groupe politique européen
 l: Nom du député
 */
-const deputes = {
+
+export const deputes = {
   5565: { o: ["5441"], g: ["5153"], l: "Brice HORTEFEUX" },
   24505: { o: ["6049"], g: ["6259"], l: "Emmanuel MAUREL" },
   24594: { o: ["5441"], g: ["5153"], l: "Anne SANDER" },
@@ -419,14 +353,3 @@ const deputes = {
   250918: { o: ["5225"], g: ["5155"], l: "François THIOLLET" },
   251859: { o: ["6442"], g: ["5704"], l: "Guy LAVOCAT" },
 };
-
-const dataset = {
-  votes,
-  groups,
-  lists,
-  org_to_list,
-  deputes,
-};
-
-fs.writeFileSync("../frontend/src/data.json", JSON.stringify(dataset));
-console.log("✅ Données exportées");

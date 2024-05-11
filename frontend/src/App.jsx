@@ -281,17 +281,6 @@ const VoteCard = ({ vote_id }) => {
           <li>{vote.subtitle_2}</li>
         </ul>
       </div>
-      <Button
-        startIcon={<Add />}
-        className="more-info"
-        color="lightBlue"
-        variant="contained"
-        disableElevation
-        target="_blank"
-        href={vote.url}
-      >
-        PLUS D’INFOS
-      </Button>
       <div className="results">
         {Object.entries(calculateVote(vote.votes))
           .filter(([, results]) => !Number.isNaN(results["-%"]))
@@ -343,6 +332,17 @@ const VoteCard = ({ vote_id }) => {
         <ToggleButton value="0">Passer</ToggleButton>
         <ToggleButton value="+">👍 Pour</ToggleButton>
       </ToggleButtonGroup>
+      <Button
+        startIcon={<Add />}
+        className="more-info"
+        color="lightBlue"
+        variant="contained"
+        disableElevation
+        target="_blank"
+        href={vote.url}
+      >
+        PLUS D’INFOS
+      </Button>
     </>
   );
 };
@@ -400,7 +400,7 @@ const LigneResultat = ({ id, tab, approval }) => {
 const resultTabs = [
   {
     label: "Listes",
-    text: "Pourcentage d’accord avec les nouvelles listes",
+    text: "Pourcentage d’accord avec les listes 2024",
     getResults: (result) => result.lists,
     getMeta: (id) => ({
       imgSrc: `/lists/${id}.jpg`,
@@ -412,7 +412,7 @@ const resultTabs = [
   },
   {
     label: "Groupes",
-    text: "Pourcentage d’accord avec les groupes européens",
+    text: "Pourcentage d’accord avec les groupes européens (députés français uniquement)",
     getResults: (result) => result.groups,
     getMeta: (id) => ({
       imgSrc: `/orgs/${id}.svg`,
@@ -423,7 +423,7 @@ const resultTabs = [
   },
   {
     label: "Députés",
-    text: "Pourcentage d’accord avec les député sortants",
+    text: "Pourcentage d’accord avec les député français sortants",
     getResults: (result) => result.deputes,
     getMeta: (id) => ({
       imgSrc: `/deputes/${id}.jpg`,

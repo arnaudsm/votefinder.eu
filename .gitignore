@@ -1,6 +1,7 @@
 frontend/src/data.json
 dist
 legacy
+.env
 
 # Logs
 logs

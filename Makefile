@@ -2,7 +2,7 @@
 .PHONY: init dev build
 
 init:
-	(cd data && yarn && node export_data.js)
+	(cd data && yarn && node export.js)
 	(cd frontend && yarn)
 
 lint: init

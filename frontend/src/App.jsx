@@ -269,6 +269,7 @@ const VoteCard = ({ vote_id }) => {
   const vote = data.votes[vote_id];
   const tab = resultTabs[0];
   const context = useContext(Context);
+  if (!vote) return <></>;
 
   return (
     <>
@@ -343,23 +344,25 @@ const ResultsParVote = () => {
 
   return (
     <div className="ResultsParVote">
-      {Object.keys(context.choices).map((vote_id) => (
-        <Accordion
-          slotProps={{ transition: { unmountOnExit: true } }}
-          key={vote_id}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMore />}
-            aria-controls="panel1-content"
-            id="panel1-header"
+      {Object.keys(context.choices)
+        .filter((vote_id) => vote_id in data.votes)
+        .map((vote_id) => (
+          <Accordion
+            slotProps={{ transition: { unmountOnExit: true } }}
+            key={vote_id}
           >
-            {data.votes[vote_id].title}
-          </AccordionSummary>
-          <AccordionDetails>
-            <VoteCard vote_id={vote_id} />
-          </AccordionDetails>
-        </Accordion>
-      ))}
+            <AccordionSummary
+              expandIcon={<ExpandMore />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              {data.votes[vote_id].title}
+            </AccordionSummary>
+            <AccordionDetails>
+              <VoteCard vote_id={vote_id} />
+            </AccordionDetails>
+          </Accordion>
+        ))}
     </div>
   );
 };

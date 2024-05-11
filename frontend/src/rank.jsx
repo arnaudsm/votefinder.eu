@@ -22,16 +22,16 @@ export const calculateResults = (choices) => {
 
   for (const [vote_id, choice] of Object.entries(choices)) {
     if (choice == "+") {
-      for (const depute_id of data.votes[vote_id].votes?.["0"] || [])
+      for (const depute_id of data.votes?.[vote_id]?.votes?.["0"] || [])
         apply(depute_id, false);
-      for (const depute_id of data.votes[vote_id].votes?.["-"] || [])
+      for (const depute_id of data.votes?.[vote_id]?.votes?.["-"] || [])
         apply(depute_id, false);
-      for (const depute_id of data.votes[vote_id].votes?.["+"] || [])
+      for (const depute_id of data.votes?.[vote_id]?.votes?.["+"] || [])
         apply(depute_id, true);
     } else if (choice == "-") {
-      for (const depute_id of data.votes[vote_id].votes?.["-"] || [])
+      for (const depute_id of data.votes?.[vote_id]?.votes?.["-"] || [])
         apply(depute_id, true);
-      for (const depute_id of data.votes[vote_id].votes?.["+"] || [])
+      for (const depute_id of data.votes?.[vote_id]?.votes?.["+"] || [])
         apply(depute_id, false);
     }
   }

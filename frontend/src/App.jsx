@@ -34,6 +34,7 @@ import {
   Share,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
+import LogoURL from "./icons/logo_url.svg";
 import Pour from "./icons/pour.svg";
 import EuLogo from "./icons/eu.svg";
 import Contre from "./icons/contre.svg";
@@ -435,7 +436,7 @@ const resultTabs = [
 ];
 
 const share = async () => {
-  const canvas = await html2canvas(document.body);
+  const canvas = await html2canvas(document.querySelector(".SharePopup"));
   canvas.toBlob(async (blob) => {
     const files = [new File([blob], "image.png", { type: blob.type })];
     const shareData = {
@@ -475,7 +476,16 @@ const Resultats = ({ visible }) => {
             startIcon={<Share />}
             color="primary"
             variant="contained"
-            onClick={share}
+            onClick={async () => {
+              context.setShowShare(true);
+              try {
+                await new Promise((r) => setTimeout(r, 1000));
+                await share();
+              } catch (error) {
+                console.log(error);
+              }
+              context.setShowShare(false);
+            }}
             disableElevation
           >
             Partager
@@ -630,9 +640,34 @@ const ResultsModal = () => {
   );
 };
 
+const SharePopup = () => {
+  const context = useContext(Context);
+  const tab = resultTabs[0];
+  const results = useMemo(
+    () => calculateResults(context.choices),
+    [context.choices],
+  );
+  return (
+    <div className="SharePopup">
+      <h1>Mes résultats aux Européennes 🇪🇺</h1>
+      <div className="list">
+        <div className="explanation">Pourcentage de votes d’accord</div>
+        {tab
+          .getResults(results)
+          .slice(0, 4)
+          .map(([id, approval]) => (
+            <LigneResultat key={id} id={id} approval={approval} tab={tab} />
+          ))}
+      </div>
+      <LogoURL className="logo" />
+    </div>
+  );
+};
+
 function App() {
   const [tab, setTab] = useState(0);
   const [resultPopup, setResultPopup] = useState(false);
+  const [showShare, setShowShare] = useState(false);
   const [choices, setChoices] = useState(() => {
     const json = localStorage.getItem("votes");
     if (!json) return {};
@@ -668,6 +703,8 @@ function App() {
           acceptWelcome,
           resultPopup,
           setResultPopup,
+          showShare,
+          setShowShare,
         }}
       >
         <Navbar />
@@ -683,6 +720,7 @@ function App() {
             <Welcome />
           )}
         </div>
+        {showShare && <SharePopup />}
         <ResultsModal />
         {started && <BottomNav state={[tab, setTab]} />}
       </Context.Provider>

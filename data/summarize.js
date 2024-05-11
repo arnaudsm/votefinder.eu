@@ -136,7 +136,7 @@ const getText = async (proc_id) => {
     ?.find((x) => x?.innerText == "Textes déposés :")
     ?.parentNode?.querySelector("a")?.innerText;
 
-  const vote = doc2vote[doc_id];
+  const vote = doc2vote[doc_id] || doc2vote[doc_id.replace("RC-", "")];
   if (!vote) return;
   return {
     ...vote,
@@ -165,12 +165,10 @@ const summarize = async (full_text) => {
 const getProcUrl = (epref) =>
   `https://oeil.secure.europarl.europa.eu/oeil/popups/ficheprocedure.do?reference=${epref}&l=fr`;
 
-const votes_todo = [
-  155937, 160064, 137235, 137235, 143544, 166051, 163032, 168324, 117085,
-  165088,
-];
+const votes_todo = [];
+const procedures_todo = [];
 
-const procedures = new Set();
+const procedures = new Set(procedures_todo);
 const doc2vote = {};
 for await (const row of iterateVotes()) {
   doc2vote[row.doc_id] = row;

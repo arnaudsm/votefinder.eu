@@ -281,17 +281,6 @@ const VoteCard = ({ vote_id }) => {
           <li>{vote.subtitle_2}</li>
         </ul>
       </div>
-      <Button
-        startIcon={<Add />}
-        className="more-info"
-        color="lightBlue"
-        variant="contained"
-        disableElevation
-        target="_blank"
-        href={vote.url}
-      >
-        PLUS D’INFOS
-      </Button>
       <div className="results">
         {Object.entries(calculateVote(vote.votes))
           .filter(([, results]) => !Number.isNaN(results["-%"]))
@@ -343,6 +332,17 @@ const VoteCard = ({ vote_id }) => {
         <ToggleButton value="0">Passer</ToggleButton>
         <ToggleButton value="+">👍 Pour</ToggleButton>
       </ToggleButtonGroup>
+      <Button
+        startIcon={<Add />}
+        className="more-info"
+        color="lightBlue"
+        variant="contained"
+        disableElevation
+        target="_blank"
+        href={vote.url}
+      >
+        PLUS D’INFOS
+      </Button>
     </>
   );
 };

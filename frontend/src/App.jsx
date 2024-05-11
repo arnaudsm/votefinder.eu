@@ -16,6 +16,11 @@ import {
   Tab,
   Tabs,
   Modal,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
 import {
   HowToVote,
@@ -25,6 +30,7 @@ import {
   Delete,
   Email,
   GitHub,
+  ExpandMore,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import Pour from "./icons/pour.svg";
@@ -33,7 +39,7 @@ import Contre from "./icons/contre.svg";
 import Trophy from "./icons/trophy.svg";
 import { CardSwiper } from "react-card-swiper";
 import ConfettiExplosion from "react-confetti-explosion";
-import { calculateResults } from "./rank";
+import { calculateResults, calculateVote } from "./rank";
 import { theme } from "./theme";
 
 const minVotes = 5;
@@ -51,7 +57,7 @@ const shuffle = (arr) => {
 
 const vote_ids = shuffle(Object.keys(data.votes));
 
-const Content = ({ vote_id }) => {
+const Card = ({ vote_id }) => {
   const vote = data.votes[vote_id];
 
   return (
@@ -132,7 +138,7 @@ const Votes = ({ visible }) => {
   const handleEnter = (el, meta, id) => setId(id);
   const data = unseen_vote_ids.map((vote_id) => ({
     id: vote_id,
-    content: <Content vote_id={vote_id} />,
+    content: <Card vote_id={vote_id} />,
   }));
   const progress = Math.floor(
     (Object.keys(context.choices).length / recommendedVotes) * 100,
@@ -259,6 +265,147 @@ const Welcome = () => {
   );
 };
 
+const VoteCard = ({ vote_id }) => {
+  const vote = data.votes[vote_id];
+  const tab = resultTabs[0];
+  const context = useContext(Context);
+
+  return (
+    <>
+      <div className="top">
+        <ul>
+          <li>{vote.subtitle_1}</li>
+          <li>{vote.subtitle_2}</li>
+        </ul>
+      </div>
+
+      <ToggleButtonGroup
+        value={context.choices[vote_id]}
+        exclusive
+        fullWidth={true}
+        onChange={(event) =>
+          context.choose({ vote_id, type: event.target.value })
+        }
+      >
+        <ToggleButton value="+">Pour</ToggleButton>
+        <ToggleButton value="-">Contre</ToggleButton>
+        <ToggleButton value="0">Passer</ToggleButton>
+      </ToggleButtonGroup>
+      <div className="results">
+        {Object.entries(calculateVote(vote.votes)).map(([id, results]) => (
+          <div className="result" key={id}>
+            <div className="progress">
+              <div
+                className="bar pour"
+                style={{
+                  width: `${Math.floor(results["+"] * 100)}%`,
+                }}
+              ></div>
+              <div
+                className="bar contre"
+                style={{
+                  width: `${Math.floor(results["-%"] * 100)}%`,
+                  marginLeft: `${Math.floor(results["+%"] * 100)}%`,
+                }}
+              ></div>
+              <div className="name">
+                <h4>{tab.labelAccess(id)}</h4>
+                <h5>{tab?.subtitleAccess && tab?.subtitleAccess(id)}</h5>
+              </div>
+              <div className="score">
+                {`${Math.floor(results["+"])} pour`}
+                <br />
+                {`${Math.floor(results["-"])} contre`}
+                <br />
+                {`${Math.floor(results["0"])} abs`}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <Button
+        startIcon={<Add />}
+        className="more-info"
+        color="lightBlue"
+        variant="contained"
+        disableElevation
+        target="_blank"
+        href={vote.url}
+      >
+        PLUS D’INFOS
+      </Button>
+    </>
+  );
+};
+
+const ResultsParVote = () => {
+  const context = useContext(Context);
+
+  return (
+    <div className="ResultsParVote">
+      {Object.entries(context.choices).map(([vote_id, choice]) => (
+        <Accordion
+          slotProps={{ transition: { unmountOnExit: true } }}
+          key={vote_id}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+            aria-controls="panel1-content"
+            id="panel1-header"
+          >
+            {data.votes[vote_id].title}
+          </AccordionSummary>
+          <AccordionDetails>
+            <VoteCard vote_id={vote_id} />
+          </AccordionDetails>
+        </Accordion>
+      ))}
+    </div>
+  );
+};
+
+const LigneResultat = ({ id, tab, approval }) => (
+  <div className="result">
+    <img src={tab.imgAccess(id)} alt={tab.labelAccess(id)} />
+    <div className="progress">
+      <div
+        className="bar"
+        style={{ width: `${Math.floor(approval * 100)}%` }}
+      ></div>
+      <div className="name">
+        <h4>{tab.labelAccess(id)}</h4>
+        <h5>{tab?.subtitleAccess && tab?.subtitleAccess(id)}</h5>
+      </div>
+      <div className="score">{`${Math.floor(approval * 100)}%`}</div>
+    </div>
+  </div>
+);
+
+const resultTabs = [
+  {
+    label: "Listes",
+    text: "Pourcentage d’accord avec les nouvelles listes",
+    resultAccess: (result) => result.lists,
+    imgAccess: (id) => `/lists/${id}.jpg`,
+    labelAccess: (id) => data.lists[id].label,
+    subtitleAccess: (id) => data.lists[id].leader,
+  },
+  {
+    label: "Groupes",
+    text: "Pourcentage d’accord avec les groupes européens",
+    resultAccess: (result) => result.groups,
+    imgAccess: (id) => `/orgs/${id}.svg`,
+    labelAccess: (id) => data.groups[id],
+  },
+  {
+    label: "Députés",
+    text: "Pourcentage d’accord avec les député sortants",
+    resultAccess: (result) => result.deputes,
+    imgAccess: (id) => `/deputes/${id}.jpg`,
+    labelAccess: (id) => data.deputes[id].l,
+  },
+];
+
 const Resultats = ({ visible }) => {
   const [tab, setTab] = useState(0);
   const context = useContext(Context);
@@ -268,66 +415,32 @@ const Resultats = ({ visible }) => {
   );
 
   const handleChange = (event, newValue) => setTab(newValue);
-  const tabs = [
-    {
-      label: "Listes",
-      text: "Pourcentage d’accord avec les nouvelles listes",
-      resultAccess: (result) => result.lists,
-      imgAccess: (id) => `/lists/${id}.jpg`,
-      labelAccess: (id) => data.lists[id].label,
-      subtitleAccess: (id) => data.lists[id].leader,
-    },
-    {
-      label: "Groupes",
-      text: "Pourcentage d’accord avec les groupes européens",
-      resultAccess: (result) => result.groups,
-      imgAccess: (id) => `/orgs/${id}.svg`,
-      labelAccess: (id) => data.groups[id],
-    },
-    {
-      label: "Députés",
-      text: "Pourcentage d’accord avec les député sortants",
-      resultAccess: (result) => result.deputes,
-      imgAccess: (id) => `/deputes/${id}.jpg`,
-      labelAccess: (id) => data.deputes[id].l,
-    },
-  ];
 
   return (
     <div className={`Resultats ${visible ? "" : "hide"}`}>
       <h2>🏆 Mes Résultats</h2>
       <Tabs value={tab} onChange={handleChange} variant="fullWidth">
-        {tabs.map((type) => (
+        {resultTabs.map((type) => (
           <Tab label={type.label} key={type.label} />
         ))}
+        <Tab label="Votes" />
       </Tabs>
-      {Object.keys(context.choices).length < minVotes ? (
+      {tab == 3 ? (
+        <ResultsParVote />
+      ) : Object.keys(context.choices).length < minVotes ? (
         <div className="list">
           Réponds à plus de {minVotes} questions pour voir tes résultats!
         </div>
       ) : (
         <div className="list">
-          <div className="explanation">{tabs[tab].text}</div>
-          {tabs[tab].resultAccess(results).map(([id, approval]) => (
-            <div className="result" key={id}>
-              <img
-                src={tabs[tab].imgAccess(id)}
-                alt={tabs[tab].labelAccess(id)}
-              />
-              <div className="progress">
-                <div
-                  className="bar"
-                  style={{ width: `${Math.floor(approval * 100)}%` }}
-                ></div>
-                <div className="name">
-                  <h4>{tabs[tab].labelAccess(id)}</h4>
-                  <h5>
-                    {tabs[tab]?.subtitleAccess && tabs[tab]?.subtitleAccess(id)}
-                  </h5>
-                </div>
-                <div className="score">{`${Math.floor(approval * 100)}%`}</div>
-              </div>
-            </div>
+          <div className="explanation">{resultTabs[tab].text}</div>
+          {resultTabs[tab].resultAccess(results).map(([id, approval]) => (
+            <LigneResultat
+              key={id}
+              id={id}
+              approval={approval}
+              tab={resultTabs[tab]}
+            />
           ))}
 
           <Button

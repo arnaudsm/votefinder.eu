@@ -6,9 +6,15 @@ html {
   font-family: "Roboto", sans-serif;
 }
 
-@media (min-width: 800px) {
+@media (min-height: 950px) {
   html {
     zoom: 125%
+  }
+}
+
+@media (max-height: 580px) {
+  html {
+    zoom: 75%
   }
 }
 
@@ -295,6 +301,10 @@ body {
       height: 3.375rem;
       box-shadow: $shadow;
 
+      &:hover {
+        opacity: .85;
+      }
+
       img {
         object-fit: contain;
         background-color: white;
@@ -463,8 +473,6 @@ body {
 }
 
 .ResultsParVote {
-  padding: 1rem;
-
   .MuiSvgIcon-root {
     color: white;
   }
@@ -501,28 +509,25 @@ body {
   }
 
   .MuiToggleButtonGroup-root {
-    background-color: #ffffff63;
-
-    .Mui-selected,
-    .MuiButtonBase-root:hover {
-      background-color: white;
-      border: 1px solid grey;
-      color: black;
-    }
+    background: white;
   }
+
+  .mon-opinion {
+    text-align: center;
+  }
+
 
   .results {
     display: flex;
     flex-direction: column;
     gap: .2rem;
-    margin-top: 1rem;
+    margin: 1rem 0rem;
 
     .result {
       display: flex;
       background-color: #C2C2C2;
       border-radius: 0.675rem;
       height: 3.375rem;
-      box-shadow: $shadow;
 
       .progress {
         height: 3.375rem;

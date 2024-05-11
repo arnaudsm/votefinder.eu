@@ -31,6 +31,7 @@ import {
   Email,
   GitHub,
   ExpandMore,
+  Share,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import Pour from "./icons/pour.svg";
@@ -41,6 +42,7 @@ import { CardSwiper } from "react-card-swiper";
 import ConfettiExplosion from "react-confetti-explosion";
 import { calculateResults, calculateVote } from "./rank";
 import { theme } from "./theme";
+import html2canvas from "html2canvas";
 
 const minVotes = 5;
 const recommendedVotes = 20;
@@ -432,6 +434,27 @@ const resultTabs = [
   },
 ];
 
+const share = async () => {
+  const canvas = await html2canvas(document.body);
+  canvas.toBlob(async (blob) => {
+    const files = [new File([blob], "image.png", { type: blob.type })];
+    const shareData = {
+      text: "https://votefinder.eu",
+      title: "Mes meilleurs candidats aux Européennes d'après VoteFinder.eu",
+      files,
+    };
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      console.warn("Sharing not supported", shareData);
+    }
+  });
+};
+
 const Resultats = ({ visible }) => {
   const [tab, setTab] = useState(0);
   const context = useContext(Context);
@@ -444,7 +467,21 @@ const Resultats = ({ visible }) => {
 
   return (
     <div className={`Resultats ${visible ? "" : "hide"}`}>
-      <h2>🏆 Mes Résultats</h2>
+      <div className="header">
+        <h2>🏆 Mes Résultats</h2>
+
+        {navigator.canShare && (
+          <Button
+            startIcon={<Share />}
+            color="primary"
+            variant="contained"
+            onClick={share}
+            disableElevation
+          >
+            Partager
+          </Button>
+        )}
+      </div>
       <Tabs value={tab} onChange={handleChange} variant="fullWidth">
         {resultTabs.map((type) => (
           <Tab label={type.label} key={type.label} />

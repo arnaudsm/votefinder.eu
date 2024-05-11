@@ -276,8 +276,20 @@ body {
   border-bottom-right-radius: 1rem;
   margin-bottom: 1rem;
 
-  h2 {
+  .header {
     margin: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      margin: 0;
+    }
+
+    .MuiButtonBase-root {
+      height: 3rem;
+    }
+
   }
 
   .MuiTabs-fixed {

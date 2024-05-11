@@ -59,7 +59,6 @@ https://oeil.secure.europarl.europa.eu/oeil/popups/summary.do?id=1606927&t=e&l=f
 - Créez une pull request avec le texte en question.
 
 ## Todo
-- Rajouter des textes clivants
 - Crash rotations successives
 - Screenshot plus joli
 - Tests

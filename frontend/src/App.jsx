@@ -31,6 +31,7 @@ import {
   Email,
   GitHub,
   ExpandMore,
+  Share,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import Pour from "./icons/pour.svg";
@@ -41,6 +42,7 @@ import { CardSwiper } from "react-card-swiper";
 import ConfettiExplosion from "react-confetti-explosion";
 import { calculateResults, calculateVote } from "./rank";
 import { theme } from "./theme";
+import html2canvas from "html2canvas";
 
 const minVotes = 5;
 const recommendedVotes = 20;
@@ -279,51 +281,6 @@ const VoteCard = ({ vote_id }) => {
           <li>{vote.subtitle_2}</li>
         </ul>
       </div>
-
-      <ToggleButtonGroup
-        value={context.choices[vote_id]}
-        exclusive
-        fullWidth={true}
-        onChange={(event) =>
-          context.choose({ vote_id, type: event.target.value })
-        }
-      >
-        <ToggleButton value="+">Pour</ToggleButton>
-        <ToggleButton value="-">Contre</ToggleButton>
-        <ToggleButton value="0">Passer</ToggleButton>
-      </ToggleButtonGroup>
-      <div className="results">
-        {Object.entries(calculateVote(vote.votes)).map(([id, results]) => (
-          <div className="result" key={id}>
-            <div className="progress">
-              <div
-                className="bar pour"
-                style={{
-                  width: `${Math.floor(results["+%"] * 100)}%`,
-                }}
-              ></div>
-              <div
-                className="bar contre"
-                style={{
-                  width: `${Math.floor(results["-%"] * 100)}%`,
-                  marginLeft: `${Math.floor(results["+%"] * 100)}%`,
-                }}
-              ></div>
-              <div className="name">
-                <h4>{tab.labelAccess(id)}</h4>
-                <h5>{tab?.subtitleAccess && tab?.subtitleAccess(id)}</h5>
-              </div>
-              <div className="score">
-                {`${Math.floor(results["+"])} pour`}
-                <br />
-                {`${Math.floor(results["-"])} contre`}
-                <br />
-                {`${Math.floor(results["0"])} abs`}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
       <Button
         startIcon={<Add />}
         className="more-info"
@@ -335,6 +292,57 @@ const VoteCard = ({ vote_id }) => {
       >
         PLUS D’INFOS
       </Button>
+      <div className="results">
+        {Object.entries(calculateVote(vote.votes))
+          .filter(([, results]) => !Number.isNaN(results["-%"]))
+          .map(([id, results]) => {
+            const meta = tab.getMeta(id);
+            return (
+              <div className="result" key={id}>
+                <div className="progress">
+                  <div
+                    className="bar pour"
+                    style={{
+                      width: `${Math.floor(results["+%"] * 100)}%`,
+                    }}
+                  ></div>
+                  <div
+                    className="bar contre"
+                    style={{
+                      width: `${Math.floor(results["-%"] * 100)}%`,
+                      marginLeft: `${Math.floor(results["+%"] * 100)}%`,
+                    }}
+                  ></div>
+                  <div className="name">
+                    <h4>{meta.label}</h4>
+                    <h5>{meta.subtitle}</h5>
+                  </div>
+                  <div className="score">
+                    {`${Math.floor(results["+"])} pour`}
+                    <br />
+                    {`${Math.floor(results["-"])} contre`}
+                    <br />
+                    {`${Math.floor(results["0"])} abs`}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+      </div>
+      <h2 className="mon-opinion">Mon Opinion</h2>
+      <ToggleButtonGroup
+        value={context.choices[vote_id]}
+        exclusive
+        disableElevation
+        fullWidth={true}
+        onChange={(event) =>
+          context.choose({ vote_id, type: event.target.value })
+        }
+      >
+        <ToggleButton value="-">👎 Contre</ToggleButton>
+        <ToggleButton value="0">Passer</ToggleButton>
+        <ToggleButton value="+">👍 Pour</ToggleButton>
+      </ToggleButtonGroup>
     </>
   );
 };
@@ -367,47 +375,85 @@ const ResultsParVote = () => {
   );
 };
 
-const LigneResultat = ({ id, tab, approval }) => (
-  <div className="result">
-    <img src={tab.imgAccess(id)} alt={tab.labelAccess(id)} />
-    <div className="progress">
-      <div
-        className="bar"
-        style={{ width: `${Math.floor(approval * 100)}%` }}
-      ></div>
-      <div className="name">
-        <h4>{tab.labelAccess(id)}</h4>
-        <h5>{tab?.subtitleAccess && tab?.subtitleAccess(id)}</h5>
+const LigneResultat = ({ id, tab, approval }) => {
+  const meta = tab.getMeta(id);
+  return (
+    <a className="result" href={meta.hrefAccess} target="_blank">
+      <img src={meta.imgSrc} alt={meta.label} />
+      <div className="progress">
+        <div
+          className="bar"
+          style={{ width: `${Math.floor(approval * 100)}%` }}
+        ></div>
+        <div className="name">
+          <h4>{meta.label}</h4>
+          <h5>{meta.subtitle}</h5>
+        </div>
+        <div className="score">
+          {meta.scoreOverride || `${Math.floor(approval * 100)}%`}
+        </div>
       </div>
-      <div className="score">{`${Math.floor(approval * 100)}%`}</div>
-    </div>
-  </div>
-);
+    </a>
+  );
+};
 
 const resultTabs = [
   {
     label: "Listes",
     text: "Pourcentage d’accord avec les nouvelles listes",
-    resultAccess: (result) => result.lists,
-    imgAccess: (id) => `/lists/${id}.jpg`,
-    labelAccess: (id) => data.lists[id].label,
-    subtitleAccess: (id) => data.lists[id].leader,
+    getResults: (result) => result.lists,
+    getMeta: (id) => ({
+      imgSrc: `/lists/${id}.jpg`,
+      label: data.lists[id].label,
+      subtitle: data.lists[id].leader,
+      hrefAccess: data.lists[id].program_url,
+      scoreOverride: data.lists[id].non_sortant ? "Non Sortant" : null,
+    }),
   },
   {
     label: "Groupes",
     text: "Pourcentage d’accord avec les groupes européens",
-    resultAccess: (result) => result.groups,
-    imgAccess: (id) => `/orgs/${id}.svg`,
-    labelAccess: (id) => data.groups[id],
+    getResults: (result) => result.groups,
+    getMeta: (id) => ({
+      imgSrc: `/orgs/${id}.svg`,
+      label: data.groups[id].label,
+      subtitle: null,
+      hrefAccess: data.groups[id].url,
+    }),
   },
   {
     label: "Députés",
     text: "Pourcentage d’accord avec les député sortants",
-    resultAccess: (result) => result.deputes,
-    imgAccess: (id) => `/deputes/${id}.jpg`,
-    labelAccess: (id) => data.deputes[id].l,
+    getResults: (result) => result.deputes,
+    getMeta: (id) => ({
+      imgSrc: `/deputes/${id}.jpg`,
+      label: data.deputes[id].l,
+      subtitle: null,
+      hrefAccess: `https://www.europarl.europa.eu/meps/fr/${id}`,
+    }),
   },
 ];
+
+const share = async () => {
+  const canvas = await html2canvas(document.body);
+  canvas.toBlob(async (blob) => {
+    const files = [new File([blob], "image.png", { type: blob.type })];
+    const shareData = {
+      text: "https://votefinder.eu",
+      title: "Mes meilleurs candidats aux Européennes d'après VoteFinder.eu",
+      files,
+    };
+    if (navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      console.warn("Sharing not supported", shareData);
+    }
+  });
+};
 
 const Resultats = ({ visible }) => {
   const [tab, setTab] = useState(0);
@@ -416,12 +462,26 @@ const Resultats = ({ visible }) => {
     () => calculateResults(context.choices),
     [context.choices],
   );
-
+  const minVotesReached = Object.keys(context.choices).length < minVotes;
   const handleChange = (event, newValue) => setTab(newValue);
 
   return (
     <div className={`Resultats ${visible ? "" : "hide"}`}>
-      <h2>🏆 Mes Résultats</h2>
+      <div className="header">
+        <h2>🏆 Mes Résultats</h2>
+
+        {minVotesReached && navigator.canShare && (
+          <Button
+            startIcon={<Share />}
+            color="primary"
+            variant="contained"
+            onClick={share}
+            disableElevation
+          >
+            Partager
+          </Button>
+        )}
+      </div>
       <Tabs value={tab} onChange={handleChange} variant="fullWidth">
         {resultTabs.map((type) => (
           <Tab label={type.label} key={type.label} />
@@ -430,14 +490,14 @@ const Resultats = ({ visible }) => {
       </Tabs>
       {tab == 3 ? (
         <ResultsParVote />
-      ) : Object.keys(context.choices).length < minVotes ? (
+      ) : minVotesReached ? (
         <div className="list">
           Réponds à plus de {minVotes} questions pour voir tes résultats!
         </div>
       ) : (
         <div className="list">
           <div className="explanation">{resultTabs[tab].text}</div>
-          {resultTabs[tab].resultAccess(results).map(([id, approval]) => (
+          {resultTabs[tab].getResults(results).map(([id, approval]) => (
             <LigneResultat
               key={id}
               id={id}

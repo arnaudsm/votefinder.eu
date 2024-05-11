@@ -29,11 +29,13 @@ Les contribution techniques sont les bienvenues, mais aussi les non-techniques.
 VoteFinder ne comporte qu'une centaine de lois résumées pour l'instant. N'hésitez pas à rajouter la votre !
 
 Notre ligne éditoriale sur les textes est la suivante
+
 - Préférer les votes de texte entier, le vote final de préférence.
 - Eviter les petits amendements rejetés pour des raisons partisanes.
 - Eviter les textes purement techniques sans teneur politique.
 
 ### Proposer un résumé de texte
+
 - Identifiez le numéro du vote en question, par exemple sur `https://howtheyvote.eu/votes/112117`.
 - Créez un fichier `data/votes/[vote_id].txt`, avez le format suivant
 
@@ -52,12 +54,15 @@ Réduire l'écart de salaire entre les femmes et les hommes
 - Introduire des mesures de transparence des salaires et protéger les droits des travailleurs à temps partiel
 https://oeil.secure.europarl.europa.eu/oeil/popups/summary.do?id=1606927&t=e&l=fr
 ```
+
 - La CI vous dira si le texte est dans le format approprié.
 - Créez une pull request avec le texte en question.
 
 ## Todo
-
-- Fonction Partage
+- Rajouter des textes clivants
+- Crash rotations successives
+- Screenshot plus joli
+- Tests
 - Communiqué de presse
 - Réseaux Sociaux
 - Taux d'absentéisme

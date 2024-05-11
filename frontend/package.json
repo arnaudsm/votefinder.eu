@@ -17,6 +17,7 @@
     "@mui/material": "^5.15.17",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
+    "html2canvas": "^1.4.1",
     "prettier": "^3.2.5",
     "react": "^18.2.0",
     "react-card-swiper": "^1.1.25",

@@ -59,12 +59,10 @@ https://oeil.secure.europarl.europa.eu/oeil/popups/summary.do?id=1606927&t=e&l=f
 - Créez une pull request avec le texte en question.
 
 ## Todo
-- Crash rotations successives
-- Fonction partage avec screenshot https://github.com/niklasvh/html2canvas?ref=benkaiser.dev
-- Relire commentaires thomas et maxime et alix
-- montrer parti des députés ?
-- Tests
 - Rajouter des textes clivants
+- Crash rotations successives
+- Screenshot plus joli
+- Tests
 - Communiqué de presse
 - Réseaux Sociaux
 - Taux d'absentéisme

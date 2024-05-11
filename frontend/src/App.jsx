@@ -560,7 +560,6 @@ const About = ({ visible }) => {
         <h2>L’Équipe</h2>
         <div>
           <div>Arnaud de Saint Méloir</div>
-          <div>Yeliz Inci</div>
           <div>Arnaud-Yoh Massenet</div>
           <div>Rémi Dupont</div>
         </div>

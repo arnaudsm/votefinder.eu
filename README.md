@@ -60,6 +60,5 @@ https://oeil.secure.europarl.europa.eu/oeil/popups/summary.do?id=1606927&t=e&l=f
 - Fonction Partage
 - Communiqué de presse
 - Réseaux Sociaux
-- Détail des résultats par vote
 - Taux d'absentéisme
 - Etendre aux autres pays d'europe

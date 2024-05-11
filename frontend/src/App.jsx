@@ -462,7 +462,7 @@ const Resultats = ({ visible }) => {
     () => calculateResults(context.choices),
     [context.choices],
   );
-  const minVotesReached = Object.keys(context.choices).length < minVotes;
+  const minVotesReached = Object.keys(context.choices).length >= minVotes;
   const handleChange = (event, newValue) => setTab(newValue);
 
   return (
@@ -492,10 +492,6 @@ const Resultats = ({ visible }) => {
         <ResultsParVote />
       ) : minVotesReached ? (
         <div className="list">
-          Réponds à plus de {minVotes} questions pour voir tes résultats!
-        </div>
-      ) : (
-        <div className="list">
           <div className="explanation">{resultTabs[tab].text}</div>
           {resultTabs[tab].getResults(results).map(([id, approval]) => (
             <LigneResultat
@@ -505,6 +501,10 @@ const Resultats = ({ visible }) => {
               tab={resultTabs[tab]}
             />
           ))}
+        </div>
+      ) : (
+        <div className="list">
+          Réponds à plus de {minVotes} questions pour voir tes résultats!
         </div>
       )}
     </div>

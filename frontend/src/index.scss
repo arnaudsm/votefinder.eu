@@ -80,9 +80,9 @@ body {
     }
 
     .swipe-card__content {
-      background: var(--primary);
       height: 100%;
       width: 100%;
+      background: var(--primary);
       color: white;
     }
   }
@@ -460,4 +460,136 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.ResultsParVote {
+  padding: 1rem;
+
+  .MuiSvgIcon-root {
+    color: white;
+  }
+
+  .MuiAccordion-root {
+    border-radius: 0 !important;
+    background-color: var(--primary);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+    ul {
+      padding-left: 1rem;
+      padding-top: 1rem;
+      margin-top: 0;
+      border-top: #ffffff30 1px solid;
+
+      li {
+        margin-bottom: 1rem;
+      }
+    }
+
+    .more-info {
+      height: 2.5rem;
+      margin-top: 1rem;
+      width: 100%;
+
+      &:hover {
+        opacity: .9;
+      }
+    }
+  }
+
+  .MuiToggleButtonGroup-root {
+    background-color: #ffffff63;
+
+    .Mui-selected,
+    .MuiButtonBase-root:hover {
+      background-color: white;
+      border: 1px solid grey;
+      color: black;
+    }
+  }
+
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    margin-top: 1rem;
+
+    .result {
+      display: flex;
+      background-color: #C2C2C2;
+      border-radius: 0.675rem;
+      height: 3.375rem;
+      box-shadow: $shadow;
+
+      .progress {
+        height: 3.375rem;
+        border-radius: 0.675rem;
+        overflow: hidden;
+        width: 100%;
+        position: relative;
+
+
+        @keyframes progress-bar {
+          0% {
+            width: 0%;
+          }
+        }
+
+        .bar {
+          transition: width 0.3s ease-in-out;
+          position: absolute;
+          display: block;
+          height: 3.375rem;
+          padding: 0;
+          margin: 0;
+          animation: progress-bar 0.3s;
+          animation-timing-function: ease-in-out;
+
+          &.pour {
+            background-color: var(--green);
+          }
+
+          &.contre {
+            background-color: var(--secondary);
+          }
+        }
+
+        .name {
+          left: 1rem;
+          color: white;
+          position: absolute;
+          display: flex;
+          flex-direction: column;
+          height: 3.375rem;
+          justify-content: center;
+
+          h4 {
+            margin: 0;
+            font-size: 1rem;
+            white-space: pre;
+          }
+
+          h5 {
+            margin: 0;
+            font-weight: normal;
+            font-size: 1rem;
+            white-space: pre;
+          }
+        }
+
+        .score {
+          color: white;
+          position: absolute;
+          text-align: right;
+          right: 1rem;
+          line-height: 0.8rem;
+          font-size: 0.7rem;
+          padding-top: 0.6rem;
+        }
+      }
+    }
+  }
 }

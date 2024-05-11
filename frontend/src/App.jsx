@@ -445,48 +445,34 @@ const Resultats = ({ visible }) => {
               tab={resultTabs[tab]}
             />
           ))}
-
-          <Button
-            className="reset"
-            startIcon={<Delete />}
-            color="primary"
-            variant="contained"
-            onClick={() => {
-              if (!confirm("Voulez vous supprimer toutes vos données locales?"))
-                return;
-              context.setChoices({});
-              context.acceptWelcome(false);
-              context.setTab(0);
-            }}
-            disableElevation
-          >
-            réinitialiser mes votes
-          </Button>
         </div>
       )}
     </div>
   );
 };
 
-const About = ({ visible }) => (
-  <div className={`About ${visible ? "" : "hide"}`}>
-    <div className="Card">
-      <h2>À Propos</h2>
-      <p>
-        VoteFinder est un projet bénévole, <br />
-        open-source, et sans tracking.
-      </p>
-      <Button
-        startIcon={<Email />}
-        color="primary"
-        variant="contained"
-        size="large"
-        href="mailto:contact@votefinder.eu"
-        disableElevation
-      >
-        nous contacter
-      </Button>
-      {/* <Button
+const About = ({ visible }) => {
+  const context = useContext(Context);
+
+  return (
+    <div className={`About ${visible ? "" : "hide"}`}>
+      <div className="Card">
+        <h2>À Propos</h2>
+        <p>
+          VoteFinder est un projet bénévole, <br />
+          open-source, et sans tracking.
+        </p>
+        <Button
+          startIcon={<Email />}
+          color="primary"
+          variant="contained"
+          size="large"
+          href="mailto:contact@votefinder.eu"
+          disableElevation
+        >
+          nous contacter
+        </Button>
+        {/* <Button
         startIcon={<Newspaper />}
         color="primary"
         variant="contained"
@@ -495,32 +481,50 @@ const About = ({ visible }) => (
       >
         communiqué de presse
       </Button> */}
-      <p>
-        Vous voulez corriger une erreur ou rajouter un texte de loi? Rejoignez
-        notre GitHub !
-      </p>
-      <Button
-        startIcon={<GitHub />}
-        color="primary"
-        variant="contained"
-        size="large"
-        disableElevation
-        href={projectURL}
-        target="_blank"
-      >
-        contribuer au projet
-      </Button>
+        <p>
+          Vous voulez corriger une erreur ou rajouter un texte de loi? Rejoignez
+          notre GitHub !
+        </p>
+        <Button
+          startIcon={<GitHub />}
+          color="primary"
+          variant="contained"
+          size="large"
+          disableElevation
+          href={projectURL}
+          target="_blank"
+        >
+          contribuer au projet
+        </Button>
 
-      <h2>L’Équipe</h2>
-      <div>
-        <div>Arnaud de Saint Méloir</div>
-        <div>Yeliz Inci</div>
-        <div>Arnaud-Yoh Massenet</div>
-        <div>Rémi Dupont</div>
+        <h2>L’Équipe</h2>
+        <div>
+          <div>Arnaud de Saint Méloir</div>
+          <div>Yeliz Inci</div>
+          <div>Arnaud-Yoh Massenet</div>
+          <div>Rémi Dupont</div>
+        </div>
+        <h2>Paramètres</h2>
+        <Button
+          className="reset"
+          startIcon={<Delete />}
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            if (!confirm("Voulez vous supprimer toutes vos données locales?"))
+              return;
+            context.setChoices({});
+            context.acceptWelcome(false);
+            context.setTab(0);
+          }}
+          disableElevation
+        >
+          réinitialiser mes votes
+        </Button>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const Context = createContext({});
 

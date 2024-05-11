@@ -298,7 +298,7 @@ const VoteCard = ({ vote_id }) => {
               <div
                 className="bar pour"
                 style={{
-                  width: `${Math.floor(results["+"] * 100)}%`,
+                  width: `${Math.floor(results["+%"] * 100)}%`,
                 }}
               ></div>
               <div

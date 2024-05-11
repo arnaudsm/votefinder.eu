@@ -2,5 +2,12 @@
   "name": "data",
   "version": "1.0.0",
   "license": "MIT",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "he": "^1.2.0",
+    "node-html-parser": "^6.1.13",
+    "p-ratelimit": "^1.0.1",
+    "replicate": "^0.29.4"
+  }
 }

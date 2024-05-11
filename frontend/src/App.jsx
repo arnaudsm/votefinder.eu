@@ -400,7 +400,7 @@ const LigneResultat = ({ id, tab, approval }) => {
 const resultTabs = [
   {
     label: "Listes",
-    text: "Pourcentage d’accord avec les nouvelles listes",
+    text: "Pourcentage d’accord avec les listes 2024",
     getResults: (result) => result.lists,
     getMeta: (id) => ({
       imgSrc: `/lists/${id}.jpg`,
@@ -412,7 +412,7 @@ const resultTabs = [
   },
   {
     label: "Groupes",
-    text: "Pourcentage d’accord avec les groupes européens",
+    text: "Pourcentage d’accord avec les groupes européens (députés français uniquement)",
     getResults: (result) => result.groups,
     getMeta: (id) => ({
       imgSrc: `/orgs/${id}.svg`,
@@ -423,7 +423,7 @@ const resultTabs = [
   },
   {
     label: "Députés",
-    text: "Pourcentage d’accord avec les député sortants",
+    text: "Pourcentage d’accord avec les député français sortants",
     getResults: (result) => result.deputes,
     getMeta: (id) => ({
       imgSrc: `/deputes/${id}.jpg`,

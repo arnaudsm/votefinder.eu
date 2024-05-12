@@ -2,26 +2,9 @@
 
 ![Logo](frontend/src/icons/logo.svg)
 
-Juge les textes votés au Parlement Européen ✉️
-
-Et découvre quelle liste vote comme toi ✌️
-
-## Ambition
-
 Une application web de statistiques sur les votes du parlement européen.
 
 Porte sur le 9ème mandat et les députés Français pour l'instant.
-
-## Dépendances
-
-- GNU make
-- node.js >= 18 (`nvm use lts/hydrogen`)
-- yarn (`npm install --global yarn`)
-
-## Fonctionnement
-
-- `make` pour initialiser et lancer un serveur local
-- `make build` pour compiler l'application
 
 ## Contribuer
 
@@ -58,10 +41,22 @@ https://oeil.secure.europarl.europa.eu/oeil/popups/summary.do?id=1606927&t=e&l=f
 - La CI vous dira si le texte est dans le format approprié.
 - Créez une pull request avec le texte en question.
 
+## Dépendances
+
+- GNU make
+- node.js >= 18 (`nvm use lts/hydrogen`)
+- yarn (`npm install --global yarn`)
+
+## Fonctionnement
+
+- `make` pour initialiser et lancer un serveur local
+- `make build` pour compiler l'application
+
 ## Todo
+
+- URL des listes sortantes
+- Tests E2E
 - Crash rotations successives
-- Screenshot plus joli
-- Tests
 - Communiqué de presse
 - Réseaux Sociaux
 - Taux d'absentéisme

@@ -4,6 +4,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
+    "csv": "^6.3.8",
     "dotenv": "^16.4.5",
     "he": "^1.2.0",
     "node-html-parser": "^6.1.13",

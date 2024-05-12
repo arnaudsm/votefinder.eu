@@ -436,24 +436,29 @@ const resultTabs = [
 ];
 
 const share = async () => {
-  const canvas = await html2canvas(document.querySelector(".SharePopup"));
-  canvas.toBlob(async (blob) => {
-    const files = [new File([blob], "image.png", { type: blob.type })];
-    const shareData = {
-      text: "https://votefinder.eu",
-      title: "Mes meilleurs candidats aux Européennes d'après VoteFinder.eu",
-      files,
-    };
-    if (navigator.canShare && navigator.canShare(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        console.error(err);
+  try {
+    await new Promise((r) => setTimeout(r, 800));
+    const canvas = await html2canvas(document.querySelector(".SharePopup"));
+    canvas.toBlob(async (blob) => {
+      const files = [new File([blob], "image.png", { type: blob.type })];
+      const shareData = {
+        text: "https://votefinder.eu",
+        title: "Mes meilleurs candidats aux Européennes d'après VoteFinder.eu",
+        files,
+      };
+      if (navigator.canShare && navigator.canShare(shareData)) {
+        try {
+          await navigator.share(shareData);
+        } catch (err) {
+          console.error(err);
+        }
+      } else {
+        console.warn("Sharing not supported", shareData);
       }
-    } else {
-      console.warn("Sharing not supported", shareData);
-    }
-  });
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const Resultats = ({ visible }) => {
@@ -478,12 +483,7 @@ const Resultats = ({ visible }) => {
             variant="contained"
             onClick={async () => {
               context.setShowShare(true);
-              try {
-                await new Promise((r) => setTimeout(r, 1000));
-                await share();
-              } catch (error) {
-                console.log(error);
-              }
+              await share();
               context.setShowShare(false);
             }}
             disableElevation

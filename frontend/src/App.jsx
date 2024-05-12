@@ -486,6 +486,7 @@ const Resultats = ({ visible }) => {
               await share();
               context.setShowShare(false);
             }}
+            disabled={context.showShare}
             disableElevation
           >
             Partager

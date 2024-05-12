@@ -323,7 +323,6 @@ const VoteCard = ({ vote_id }) => {
       <ToggleButtonGroup
         value={context.choices[vote_id]}
         exclusive
-        disableElevation
         fullWidth={true}
         onChange={(event) =>
           context.choose({ vote_id, type: event.target.value })
@@ -350,28 +349,33 @@ const VoteCard = ({ vote_id }) => {
 
 const ResultsParVote = () => {
   const context = useContext(Context);
-
+  const choices = Object.keys(context.choices).filter(
+    (vote_id) => vote_id in data.votes,
+  );
   return (
     <div className="ResultsParVote">
-      {Object.keys(context.choices)
-        .filter((vote_id) => vote_id in data.votes)
-        .map((vote_id) => (
-          <Accordion
-            slotProps={{ transition: { unmountOnExit: true } }}
-            key={vote_id}
+      {choices.map((vote_id) => (
+        <Accordion
+          slotProps={{ transition: { unmountOnExit: true } }}
+          key={vote_id}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMore />}
+            aria-controls="panel1-content"
+            id="panel1-header"
           >
-            <AccordionSummary
-              expandIcon={<ExpandMore />}
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-              {data.votes[vote_id].title}
-            </AccordionSummary>
-            <AccordionDetails>
-              <VoteCard vote_id={vote_id} />
-            </AccordionDetails>
-          </Accordion>
-        ))}
+            {data.votes[vote_id].title}
+          </AccordionSummary>
+          <AccordionDetails>
+            <VoteCard vote_id={vote_id} />
+          </AccordionDetails>
+        </Accordion>
+      ))}
+      {choices.length == 0 && (
+        <div className="list">
+          Réponds à plus de {minVotes} questions pour voir tes résultats!
+        </div>
+      )}
     </div>
   );
 };

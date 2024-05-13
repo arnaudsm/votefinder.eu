@@ -577,10 +577,35 @@ const About = ({ visible }) => {
         </Button>
 
         <h2>L’Équipe</h2>
-        <div>
-          <div>Arnaud de Saint Méloir</div>
-          <div>Arnaud-Yoh Massenet</div>
-          <div>Rémi Dupont</div>
+        <div className="equipe">
+          <div>
+            <h4>Arnaud de Saint Méloir</h4>
+            <h5>Créateur</h5>
+          </div>
+          <div>
+            <h4>Arnaud-Yoh Massenet</h4>
+            <h5>Data Scientist</h5>
+          </div>
+          <div>
+            <h4>Rémi Dupont</h4>
+            <h5>Data Scientist</h5>
+          </div>
+          <div>
+            <h4>Anna Logacheva</h4>
+            <h5>Communication</h5>
+          </div>
+          <div>
+            <h4>Hortense de Saint Méloir</h4>
+            <h5>Spécialiste Politique Agricole</h5>
+          </div>
+          <div>
+            <h4>Yeliz Inci</h4>
+            <h5>Spécialiste droits humains</h5>
+          </div>
+          <div>
+            <h4>Theo Barry</h4>
+            <h5>Analyste</h5>
+          </div>
         </div>
         <h2>Paramètres</h2>
         <Button

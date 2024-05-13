@@ -239,10 +239,10 @@ const Welcome = () => {
         <div className="Card">
           <div className="top">
             <EuLogo />
-            <h2>Juge les textes votés au Parlement Européen ✉️</h2>
+            <h2>Votez les textes du Parlement Européen ✉️</h2>
           </div>
           <div className="bottom">
-            <h2>Et découvre quelle liste vote comme toi ✌️</h2>
+            <h2>Et découvrez quel parti vote comme vous✌️</h2>
             <Button
               className="welcome-start"
               color="lightRed"
@@ -641,7 +641,7 @@ const ResultsModal = () => {
       className="ResultsModal"
     >
       <div className="content">
-        <h2>Tu as voté assez de lois pour découvrir tes résultats !</h2>
+        <h2>Vous avez voté assez de lois pour découvrir vos résultats !</h2>
         <ConfettiExplosion zIndex="1400" />
         <Trophy />
         <div className="actions">
@@ -684,7 +684,7 @@ const SharePopup = () => {
   );
   return (
     <div className="SharePopup">
-      <h1>Mes résultats aux Européennes 🇪🇺</h1>
+      <h1>Les partis qui votent comme moi aux Européennes 🇪🇺</h1>
       <div className="list">
         <div className="explanation">Pourcentage de votes d’accord</div>
         {tab

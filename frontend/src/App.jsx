@@ -32,6 +32,7 @@ import {
   GitHub,
   ExpandMore,
   Share,
+  Newspaper,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import LogoURL from "./icons/logo_url.svg";
@@ -547,15 +548,18 @@ const About = ({ visible }) => {
         >
           nous contacter
         </Button>
-        {/* <Button
-        startIcon={<Newspaper />}
-        color="primary"
-        variant="contained"
-        size="large"
-        disableElevation
-      >
-        communiqué de presse
-      </Button> */}
+        {
+          <Button
+            startIcon={<Newspaper />}
+            color="primary"
+            variant="contained"
+            size="large"
+            href="Communique-de-Presse-VoteFinder.eu.pdf"
+            disableElevation
+          >
+            communiqué de presse
+          </Button>
+        }
         <p>
           Vous voulez corriger une erreur ou rajouter un texte de loi? Rejoignez
           notre GitHub !

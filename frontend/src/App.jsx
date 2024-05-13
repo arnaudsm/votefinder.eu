@@ -374,7 +374,7 @@ const ResultsParVote = () => {
       ))}
       {choices.length == 0 && (
         <div className="list">
-          Réponds à plus de {minVotes} questions pour voir tes résultats!
+          Répondez à plus de {minVotes} questions pour voir vos résultats!
         </div>
       )}
     </div>
@@ -538,6 +538,21 @@ const About = ({ visible }) => {
           VoteFinder est un projet bénévole, <br />
           open-source, et sans tracking.
         </p>
+
+        <Button
+          startIcon={<PictureAsPdf />}
+          color="primary"
+          variant="contained"
+          size="large"
+          href="Communique-de-Presse-VoteFinder.eu.pdf"
+          disableElevation
+        >
+          communiqué de presse
+        </Button>
+        <p>
+          Vous voulez corriger une erreur ou rajouter un texte de loi ?<br />
+          Contactez-nous ou proposez une modification sur GitHub !
+        </p>
         <Button
           startIcon={<Email />}
           color="primary"
@@ -548,22 +563,6 @@ const About = ({ visible }) => {
         >
           nous contacter
         </Button>
-        {
-          <Button
-            startIcon={<PictureAsPdf />}
-            color="primary"
-            variant="contained"
-            size="large"
-            href="Communique-de-Presse-VoteFinder.eu.pdf"
-            disableElevation
-          >
-            communiqué de presse
-          </Button>
-        }
-        <p>
-          Vous voulez corriger une erreur ou rajouter un texte de loi? Rejoignez
-          notre GitHub !
-        </p>
         <Button
           startIcon={<GitHub />}
           color="primary"
@@ -573,7 +572,7 @@ const About = ({ visible }) => {
           href={projectURL}
           target="_blank"
         >
-          contribuer au projet
+          contribuer sur github
         </Button>
 
         <h2>Paramètres</h2>

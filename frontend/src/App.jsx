@@ -242,7 +242,7 @@ const Welcome = () => {
             <h2>Votez les textes du Parlement Européen ✉️</h2>
           </div>
           <div className="bottom">
-            <h2>Et découvrez quel parti vote comme vous✌️</h2>
+            <h2>Et découvrez quel parti a voté comme vous✌️</h2>
             <Button
               className="welcome-start"
               color="lightRed"
@@ -258,6 +258,9 @@ const Welcome = () => {
           </div>
         </div>
         <div className="footer">
+          Textes issus de la 9<sup>ème</sup> législature (2019-2024)
+          <br />
+          <br />
           VoteFinder est un projet bénévole, <br />
           <a href={projectURL} target="_blank">
             open-source

@@ -55,11 +55,24 @@ export const getVotes = async () => {
     const vote = all_votes[vote_id];
     if (!vote) throw new Error("vote introuvable");
 
-    if (
-      vote.votes["0"].filter((mep_id) => mep_id in deputes).length == 0 &&
-      vote.votes["-"].filter((mep_id) => mep_id in deputes).length == 0
-    )
-      throw new Error("Unanimité dans " + file);
+    // Exporter les votes français uniquement
+    vote.votes["0"] =
+      vote.votes["0"].filter((mep_id) => mep_id in deputes) || [];
+    vote.votes["-"] =
+      vote.votes["-"].filter((mep_id) => mep_id in deputes) || [];
+    vote.votes["+"] =
+      vote.votes["+"].filter((mep_id) => mep_id in deputes) || [];
+    const votes = vote.votes;
+    const getApproval = (meps) =>
+      Math.floor(
+        (100 *
+          votes["+"]?.filter((x) => !meps || meps.has(x.toString())).length) /
+          (votes["0"]?.filter((x) => !meps || meps.has(x.toString())).length +
+            votes["+"]?.filter((x) => !meps || meps.has(x.toString())).length +
+            votes["-"]?.filter((x) => !meps || meps.has(x.toString())).length)
+      );
+
+    if (getApproval() > 95) throw new Error("Unanimité dans " + file);
 
     output[vote_id] = {
       ...vote,

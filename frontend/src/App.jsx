@@ -598,7 +598,7 @@ const About = ({ visible }) => {
         <div className="equipe">
           <div>
             <h4>Arnaud de Saint Méloir</h4>
-            <h5>Créateur</h5>
+            <h5>Créateur/Ingénieur</h5>
           </div>
           <div>
             <h4>Arnaud-Yoh Massenet</h4>
@@ -618,7 +618,7 @@ const About = ({ visible }) => {
           </div>
           <div>
             <h4>Yeliz Inci</h4>
-            <h5>Spécialiste droits humains</h5>
+            <h5>Spécialiste Droits Humains</h5>
           </div>
           <div>
             <h4>Theo Barry</h4>

@@ -32,7 +32,7 @@ import {
   GitHub,
   ExpandMore,
   Share,
-  Newspaper,
+  PictureAsPdf,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import LogoURL from "./icons/logo_url.svg";
@@ -550,7 +550,7 @@ const About = ({ visible }) => {
         </Button>
         {
           <Button
-            startIcon={<Newspaper />}
+            startIcon={<PictureAsPdf />}
             color="primary"
             variant="contained"
             size="large"
@@ -574,6 +574,24 @@ const About = ({ visible }) => {
           target="_blank"
         >
           contribuer au projet
+        </Button>
+
+        <h2>Paramètres</h2>
+        <Button
+          className="reset"
+          startIcon={<Delete />}
+          color="primary"
+          variant="contained"
+          onClick={() => {
+            if (!confirm("Voulez vous supprimer toutes vos données locales?"))
+              return;
+            context.setChoices({});
+            context.acceptWelcome(false);
+            context.setTab(0);
+          }}
+          disableElevation
+        >
+          réinitialiser mes votes
         </Button>
 
         <h2>L’Équipe</h2>
@@ -607,23 +625,6 @@ const About = ({ visible }) => {
             <h5>Analyste</h5>
           </div>
         </div>
-        <h2>Paramètres</h2>
-        <Button
-          className="reset"
-          startIcon={<Delete />}
-          color="primary"
-          variant="contained"
-          onClick={() => {
-            if (!confirm("Voulez vous supprimer toutes vos données locales?"))
-              return;
-            context.setChoices({});
-            context.acceptWelcome(false);
-            context.setTab(0);
-          }}
-          disableElevation
-        >
-          réinitialiser mes votes
-        </Button>
       </div>
     </div>
   );

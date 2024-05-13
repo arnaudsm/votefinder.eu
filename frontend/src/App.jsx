@@ -596,7 +596,7 @@ const About = ({ visible }) => {
 
         <h2>L’Équipe</h2>
         <div className="equipe">
-          <div>
+          <div style={{ width: "80%" }}>
             <h4>Arnaud de Saint Méloir</h4>
             <h5>Créateur/Ingénieur</h5>
           </div>

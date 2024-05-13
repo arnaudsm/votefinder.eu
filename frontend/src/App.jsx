@@ -32,6 +32,7 @@ import {
   GitHub,
   ExpandMore,
   Share,
+  PictureAsPdf,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import LogoURL from "./icons/logo_url.svg";
@@ -238,10 +239,10 @@ const Welcome = () => {
         <div className="Card">
           <div className="top">
             <EuLogo />
-            <h2>Juge les textes votés au Parlement Européen ✉️</h2>
+            <h2>Votez les textes du Parlement Européen ✉️</h2>
           </div>
           <div className="bottom">
-            <h2>Et découvre quelle liste vote comme toi ✌️</h2>
+            <h2>Et découvrez quel parti vote comme vous✌️</h2>
             <Button
               className="welcome-start"
               color="lightRed"
@@ -547,15 +548,18 @@ const About = ({ visible }) => {
         >
           nous contacter
         </Button>
-        {/* <Button
-        startIcon={<Newspaper />}
-        color="primary"
-        variant="contained"
-        size="large"
-        disableElevation
-      >
-        communiqué de presse
-      </Button> */}
+        {
+          <Button
+            startIcon={<PictureAsPdf />}
+            color="primary"
+            variant="contained"
+            size="large"
+            href="Communique-de-Presse-VoteFinder.eu.pdf"
+            disableElevation
+          >
+            communiqué de presse
+          </Button>
+        }
         <p>
           Vous voulez corriger une erreur ou rajouter un texte de loi? Rejoignez
           notre GitHub !
@@ -572,12 +576,6 @@ const About = ({ visible }) => {
           contribuer au projet
         </Button>
 
-        <h2>L’Équipe</h2>
-        <div>
-          <div>Arnaud de Saint Méloir</div>
-          <div>Arnaud-Yoh Massenet</div>
-          <div>Rémi Dupont</div>
-        </div>
         <h2>Paramètres</h2>
         <Button
           className="reset"
@@ -595,6 +593,38 @@ const About = ({ visible }) => {
         >
           réinitialiser mes votes
         </Button>
+
+        <h2>L’Équipe</h2>
+        <div className="equipe">
+          <div style={{ width: "80%" }}>
+            <h4>Arnaud de Saint Méloir</h4>
+            <h5>Créateur/Ingénieur</h5>
+          </div>
+          <div>
+            <h4>Arnaud-Yoh Massenet</h4>
+            <h5>Data Scientist</h5>
+          </div>
+          <div>
+            <h4>Rémi Dupont</h4>
+            <h5>Data Scientist</h5>
+          </div>
+          <div>
+            <h4>Anna Logacheva</h4>
+            <h5>Communication</h5>
+          </div>
+          <div>
+            <h4>Hortense de Saint Méloir</h4>
+            <h5>Spécialiste Politique Agricole</h5>
+          </div>
+          <div>
+            <h4>Yeliz Inci</h4>
+            <h5>Spécialiste Droits Humains</h5>
+          </div>
+          <div>
+            <h4>Theo Barry</h4>
+            <h5>Analyste</h5>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -611,7 +641,7 @@ const ResultsModal = () => {
       className="ResultsModal"
     >
       <div className="content">
-        <h2>Tu as voté assez de lois pour découvrir tes résultats !</h2>
+        <h2>Vous avez voté assez de lois pour découvrir vos résultats !</h2>
         <ConfettiExplosion zIndex="1400" />
         <Trophy />
         <div className="actions">
@@ -654,7 +684,7 @@ const SharePopup = () => {
   );
   return (
     <div className="SharePopup">
-      <h1>Mes résultats aux Européennes 🇪🇺</h1>
+      <h1>Les partis qui votent comme moi aux Européennes 🇪🇺</h1>
       <div className="list">
         <div className="explanation">Pourcentage de votes d’accord</div>
         {tab

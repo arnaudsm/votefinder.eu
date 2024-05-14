@@ -47,7 +47,7 @@ import { theme } from "./theme";
 import html2canvas from "html2canvas";
 
 const minVotes = 5;
-const recommendedVotes = 20;
+const recommendedVotes = 30;
 const projectURL = "https://github.com/arnaudsm/votefinder.eu";
 
 const shuffle = (arr) => {

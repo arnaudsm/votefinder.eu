@@ -156,14 +156,20 @@ const Votes = ({ visible }) => {
   const context = useContext(Context);
   const [id, setId] = useState();
   const [unseen_vote_ids] = useState(
-    vote_ids.filter((vote_id) => !context.choices[vote_id]),
+    vote_ids
+      .filter((vote_id) => !context.choices[vote_id])
+      .sort(
+        (a, b) =>
+          Number(data.votes?.[a]?.pinned || false) -
+          Number(data.votes?.[b]?.pinned || false),
+      ),
   );
   const handleDismiss = (el, meta, id, action, operation) => {
     if (operation !== "swipe") return;
     context.choose({ vote_id: id, type: action == "like" ? "+" : "-" });
   };
   const handleEnter = (el, meta, id) => setId(id);
-  const data = unseen_vote_ids.map((vote_id) => ({
+  const cardData = unseen_vote_ids.map((vote_id) => ({
     id: vote_id,
     content: <Card vote_id={vote_id} />,
   }));
@@ -179,7 +185,7 @@ const Votes = ({ visible }) => {
       )}
       <Stack className="Stack">
         <CardSwiper
-          data={data}
+          data={cardData}
           onEnter={handleEnter}
           onFinish={() => null}
           onDismiss={handleDismiss}

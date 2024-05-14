@@ -434,28 +434,6 @@ const ResultsParVote = () => {
   );
 };
 
-const LigneResultat = ({ id, tab, approval }) => {
-  const meta = tab.getMeta(id);
-  return (
-    <a className="result" href={meta.hrefAccess} target="_blank">
-      <img src={meta.imgSrc} alt={meta.label} />
-      <div className="progress">
-        <div
-          className="bar"
-          style={{ width: `${Math.floor(approval * 100)}%` }}
-        ></div>
-        <div className="name">
-          <h4>{meta.label}</h4>
-          <h5>{meta.subtitle}</h5>
-        </div>
-        <div className="score">
-          {meta.scoreOverride || `${Math.floor(approval * 100)}%`}
-        </div>
-      </div>
-    </a>
-  );
-};
-
 const share = async () => {
   try {
     await new Promise((r) => setTimeout(r, 800));

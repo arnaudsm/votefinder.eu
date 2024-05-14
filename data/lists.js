@@ -208,7 +208,7 @@ export const org_to_list = {
   5494: "new-1", // Rassemblement national             -> Rassemblement national
   5714: "new-5", // Place publique                     -> Réveiller l'Europe
   5227: "new-5", // Parti socialiste                   -> Réveiller l'Europe
-  5474: "new-6", // Parti Radical                      -> Europe Territoires Écologie
+  5474: "new-0", // Parti Radical                      -> Besoin d’Europe
   5585: "new-8", // Nouvelle Donne                     -> Changer l'Europe
   5427: "new-0", // Mouvement Démocrate                -> Besoin d’Europe
   5502: "new-0", // Liste Renaissance                  -> Besoin d’Europe

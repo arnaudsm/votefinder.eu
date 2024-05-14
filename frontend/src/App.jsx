@@ -33,6 +33,8 @@ import {
   ExpandMore,
   Share,
   PictureAsPdf,
+  X,
+  Instagram,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import LogoURL from "./icons/logo_url.svg";
@@ -629,6 +631,26 @@ const About = ({ visible }) => {
         >
           réinitialiser mes votes
         </Button>
+
+        <h2>Réseaux Sociaux</h2>
+        <div className="socials">
+          <Button
+            color="primary"
+            variant="contained"
+            href="https://twitter.com/VoteFinder_eu"
+            startIcon={<X />}
+          >
+            / Twitter
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            href="https://www.instagram.com/votefinder.eu"
+            startIcon={<Instagram />}
+          >
+            instagram
+          </Button>
+        </div>
 
         <h2>L’Équipe</h2>
         <div className="equipe">

@@ -35,6 +35,8 @@ import {
   PictureAsPdf,
   X,
   Instagram,
+  Article,
+  QuestionAnswer,
 } from "@mui/icons-material";
 import Logo from "./icons/logo.svg";
 import LogoURL from "./icons/logo_url.svg";
@@ -97,17 +99,34 @@ const Card = ({ vote_id }) => {
         <div className="meta">
           {formatDate(vote.date)} - {getProcType(vote.proc_id)}
         </div>
-        <Button
-          startIcon={<Add />}
-          className="more-info"
-          color="lightBlue"
-          variant="contained"
-          disableElevation
-          target="_blank"
-          href={vote.summary_url}
-        >
-          PLUS D’INFOS
-        </Button>
+        <div className="actions">
+          {(vote.debat_url || vote.explications_url) && (
+            <Button
+              startIcon={<QuestionAnswer />}
+              className="more-info"
+              color="lightBlue"
+              variant="contained"
+              disableElevation
+              target="_blank"
+              href={vote.debat_url || vote.explications_url}
+            >
+              Débat
+            </Button>
+          )}
+          {vote.summary_url && (
+            <Button
+              startIcon={<Article />}
+              className="more-info"
+              color="lightBlue"
+              variant="contained"
+              disableElevation
+              target="_blank"
+              href={vote.summary_url}
+            >
+              Résumé
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

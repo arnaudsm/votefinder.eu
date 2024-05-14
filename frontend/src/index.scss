@@ -184,6 +184,14 @@ body {
       align-items: center;
       gap: 1rem;
 
+      .actions {
+        width: 100%;
+
+        &>div {
+          flex: auto;
+        }
+      }
+
       .meta {
         opacity: .7;
         text-align: center;

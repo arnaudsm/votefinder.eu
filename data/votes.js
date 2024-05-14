@@ -17,6 +17,12 @@ export const getVotes = async () => {
   const output = {};
   const all_votes = {};
   for await (const vote of iterateVotes()) all_votes[vote.vote_id] = vote;
+  const debates = {};
+  for (const file of fs.readdirSync("debates")) {
+    const data = JSON.parse(fs.readFileSync(`debates/${file}`, "utf-8"));
+    const vote_id = file.replace(".json", "");
+    debates[vote_id] = data;
+  }
 
   for (const file of fs.readdirSync("votes")) {
     const vote_id = file.split(".")[0];
@@ -76,9 +82,9 @@ export const getVotes = async () => {
 
     if (getApproval() > 96) console.log(file, getApproval());
     const date = vote.date.slice(0, 10);
-    delete data["vote_id"];
+    const debate = debates[vote_id];
 
-    output[vote_id] = { ...data, votes, date };
+    output[vote_id] = { ...data, ...debate, votes, date };
   }
   return output;
 };

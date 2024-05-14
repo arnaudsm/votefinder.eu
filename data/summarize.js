@@ -67,19 +67,17 @@ const scrapeProc = async (proc_id) => {
   try {
     const vote = await getText(proc_id);
     if (!vote) return console.log(`TEXTE INTROUVABLE POUR ${proc_id}`);
-    const file = `${vote_folder}/${vote.vote_id}.txt`;
+    const file = `${vote_folder}/${vote.vote_id}.json`;
     if (fs.existsSync(file)) return console.log(`ALREADY EXISTS ${proc_id}`);
     const ai_summary = await summarize(
       `${vote.text_title}\n\n\n${vote.text_full}`
     );
     fs.writeFileSync(
       file,
-      [
-        ai_summary.titre,
-        "- " + ai_summary.sous_titre_1,
-        "- " + ai_summary.sous_titre_2,
-        vote.text_url,
-      ].join("\n")
+      JSON.stringify({
+        ai_summary,
+        ...vote,
+      })
     );
     process.stdout.write("=");
   } catch (error) {

@@ -322,9 +322,8 @@ const Welcome = () => {
   );
 };
 
-const VoteCard = ({ vote_id }) => {
+const ResultsParVoteEach = ({ vote_id }) => {
   const vote = data.votes[vote_id];
-  const tab = resultTabs[0];
   const context = useContext(Context);
   if (!vote) return <></>;
 
@@ -342,39 +341,36 @@ const VoteCard = ({ vote_id }) => {
       <div className="results">
         {Object.entries(calculateVote(vote.votes))
           .filter(([, results]) => !Number.isNaN(results["-%"]))
-          .map(([id, results]) => {
-            const meta = tab.getMeta(id);
-            return (
-              <div className="result" key={id}>
-                <div className="progress">
-                  <div
-                    className="bar pour"
-                    style={{
-                      width: `${Math.floor(results["+%"] * 100)}%`,
-                    }}
-                  ></div>
-                  <div
-                    className="bar contre"
-                    style={{
-                      width: `${Math.floor(results["-%"] * 100)}%`,
-                      marginLeft: `${Math.floor(results["+%"] * 100)}%`,
-                    }}
-                  ></div>
-                  <div className="name">
-                    <h4>{meta.label}</h4>
-                    <h5>{meta.subtitle}</h5>
-                  </div>
-                  <div className="score">
-                    {`${Math.floor(results["+"])} pour`}
-                    <br />
-                    {`${Math.floor(results["-"])} contre`}
-                    <br />
-                    {`${Math.floor(results["0"])} abs`}
-                  </div>
+          .map(([id, results]) => (
+            <div className="result" key={id}>
+              <div className="progress">
+                <div
+                  className="bar pour"
+                  style={{
+                    width: `${Math.floor(results["+%"] * 100)}%`,
+                  }}
+                ></div>
+                <div
+                  className="bar contre"
+                  style={{
+                    width: `${Math.floor(results["-%"] * 100)}%`,
+                    marginLeft: `${Math.floor(results["+%"] * 100)}%`,
+                  }}
+                ></div>
+                <div className="name">
+                  <h4>{data.lists[id].label}</h4>
+                  <h5>{data.lists[id].leader}</h5>
+                </div>
+                <div className="score">
+                  {`${Math.floor(results["+"])} pour`}
+                  <br />
+                  {`${Math.floor(results["-"])} contre`}
+                  <br />
+                  {`${Math.floor(results["0"])} abs`}
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
       </div>
       <h2 className="mon-opinion">Mon Opinion</h2>
       <ToggleButtonGroup
@@ -425,7 +421,7 @@ const ResultsParVote = () => {
             {data.votes[vote_id].title}
           </AccordionSummary>
           <AccordionDetails>
-            <VoteCard vote_id={vote_id} />
+            <ResultsParVoteEach vote_id={vote_id} />
           </AccordionDetails>
         </Accordion>
       ))}
@@ -437,65 +433,6 @@ const ResultsParVote = () => {
     </div>
   );
 };
-
-const LigneResultat = ({ id, tab, approval }) => {
-  const meta = tab.getMeta(id);
-  return (
-    <a className="result" href={meta.hrefAccess} target="_blank">
-      <img src={meta.imgSrc} alt={meta.label} />
-      <div className="progress">
-        <div
-          className="bar"
-          style={{ width: `${Math.floor(approval * 100)}%` }}
-        ></div>
-        <div className="name">
-          <h4>{meta.label}</h4>
-          <h5>{meta.subtitle}</h5>
-        </div>
-        <div className="score">
-          {meta.scoreOverride || `${Math.floor(approval * 100)}%`}
-        </div>
-      </div>
-    </a>
-  );
-};
-
-const resultTabs = [
-  {
-    label: "Listes",
-    text: "Pourcentage d’accord avec les listes 2024",
-    getResults: (result) => result.lists,
-    getMeta: (id) => ({
-      imgSrc: `/lists/${id}.jpg`,
-      label: data.lists[id].label,
-      subtitle: data.lists[id].leader,
-      hrefAccess: data.lists[id].program_url,
-      scoreOverride: data.lists[id].non_sortant ? "Non Sortant" : null,
-    }),
-  },
-  {
-    label: "Groupes",
-    text: "Pourcentage d’accord avec les groupes européens (députés français uniquement)",
-    getResults: (result) => result.groups,
-    getMeta: (id) => ({
-      imgSrc: `/orgs/${id}.svg`,
-      label: data.groups[id].label,
-      subtitle: null,
-      hrefAccess: data.groups[id].url,
-    }),
-  },
-  {
-    label: "Députés",
-    text: "Pourcentage d’accord avec les député français sortants",
-    getResults: (result) => result.deputes,
-    getMeta: (id) => ({
-      imgSrc: `/deputes/${id}.jpg`,
-      label: data.deputes[id].l,
-      subtitle: null,
-      hrefAccess: `https://www.europarl.europa.eu/meps/fr/${id}`,
-    }),
-  },
-];
 
 const share = async () => {
   try {
@@ -521,6 +458,109 @@ const share = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const ResultListe = ({ id, approval }) => {
+  // const [open, setOpen] = useState(false);
+  // TODO : Votes par liste
+
+  return (
+    <a
+      className="liste-result"
+      href={data.lists[id].program_url}
+      key={id}
+      target="_blank"
+    >
+      <div className="top">
+        <img src={`/lists/${id}.jpg`} alt={data.lists[id].label} />
+        <div className="progress">
+          <div
+            className="bar"
+            style={{ width: `${Math.floor(approval * 100)}%` }}
+          ></div>
+          <div className="name">
+            <h4>{data.lists[id].label}</h4>
+            <h5>{data.lists[id].leader}</h5>
+          </div>
+          <div className="score">
+            {data.lists[id].non_sortant
+              ? "Non Sortant"
+              : `${Math.floor(approval * 100)}%`}
+          </div>
+        </div>
+      </div>
+    </a>
+  );
+};
+const ResultsListes = ({ results }) => (
+  <div className="list">
+    <div className="explanation">Pourcentage d’accord avec les listes 2024</div>
+    {results.lists.map(([id, approval]) => (
+      <ResultListe id={id} approval={approval} key={id} />
+    ))}
+  </div>
+);
+
+const ResultsGroupes = ({ results }) => {
+  return (
+    <div className="list">
+      <div className="explanation">
+        Pourcentage d’accord avec les groupes européens (députés français
+        uniquement)
+      </div>
+      {results.groups.map(([id, approval]) => (
+        <a
+          className="result"
+          href={data.groups[id].url}
+          key={id}
+          target="_blank"
+        >
+          <img src={`/orgs/${id}.svg`} alt={data.groups[id].label} />
+          <div className="progress">
+            <div
+              className="bar"
+              style={{ width: `${Math.floor(approval * 100)}%` }}
+            ></div>
+            <div className="name">
+              <h4>{data.groups[id].label}</h4>
+              <h5>{data.groups[id].leader}</h5>
+            </div>
+            <div className="score">{`${Math.floor(approval * 100)}%`}</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  );
+};
+
+const ResultsDeputes = ({ results }) => {
+  return (
+    <div className="list">
+      <div className="explanation">
+        Pourcentage d’accord avec les député français sortants
+      </div>
+      {results.deputes.map(([id, approval]) => (
+        <a
+          className="result"
+          href={`https://www.europarl.europa.eu/meps/fr/${id}`}
+          key={id}
+          target="_blank"
+        >
+          <img src={`/deputes/${id}.jpg`} alt={data.deputes[id]?.l} />
+          <div className="progress">
+            <div
+              className="bar"
+              style={{ width: `${Math.floor(approval * 100)}%` }}
+            ></div>
+            <div className="name">
+              <h4>{data.deputes[id]?.l}</h4>
+            </div>
+            <div className="score">{`${Math.floor(approval * 100)}%`}</div>
+          </div>
+        </a>
+      ))}
+    </div>
+  );
 };
 
 const Resultats = ({ visible }) => {
@@ -556,30 +596,24 @@ const Resultats = ({ visible }) => {
         )}
       </div>
       <Tabs value={tab} onChange={handleChange} variant="fullWidth">
-        {resultTabs.map((type) => (
-          <Tab label={type.label} key={type.label} />
-        ))}
+        <Tab label="Listes" />
+        <Tab label="Groupes" />
+        <Tab label="Députés" />
         <Tab label="Votes" />
       </Tabs>
-      {tab == 3 ? (
-        <ResultsParVote />
-      ) : minVotesReached ? (
-        <div className="list">
-          <div className="explanation">{resultTabs[tab].text}</div>
-          {resultTabs[tab].getResults(results).map(([id, approval]) => (
-            <LigneResultat
-              key={id}
-              id={id}
-              approval={approval}
-              tab={resultTabs[tab]}
-            />
-          ))}
-        </div>
-      ) : (
+      {!minVotesReached ? (
         <div className="list">
           Réponds à plus de {minVotes} questions pour voir tes résultats!
         </div>
-      )}
+      ) : tab == 0 ? (
+        <ResultsListes results={results} />
+      ) : tab == 1 ? (
+        <ResultsGroupes results={results} />
+      ) : tab == 2 ? (
+        <ResultsDeputes results={results} />
+      ) : tab == 3 ? (
+        <ResultsParVote />
+      ) : null}
     </div>
   );
 };
@@ -754,7 +788,6 @@ const ResultsModal = () => {
 
 const SharePopup = () => {
   const context = useContext(Context);
-  const tab = resultTabs[0];
   const results = useMemo(
     () => calculateResults(context.choices),
     [context.choices],
@@ -764,12 +797,27 @@ const SharePopup = () => {
       <h1>Les partis qui votent comme moi aux Européennes 🇪🇺</h1>
       <div className="list">
         <div className="explanation">Pourcentage de votes d’accord</div>
-        {tab
-          .getResults(results)
-          .slice(0, 4)
-          .map(([id, approval]) => (
-            <LigneResultat key={id} id={id} approval={approval} tab={tab} />
-          ))}
+        {results.lists.slice(0, 4).map(([id, approval]) => (
+          <a
+            className="result"
+            href={data.lists[id].program_url}
+            key={id}
+            target="_blank"
+          >
+            <img src={`/lists/${id}.jpg`} alt={data.lists[id].label} />
+            <div className="progress">
+              <div
+                className="bar"
+                style={{ width: `${Math.floor(approval * 100)}%` }}
+              ></div>
+              <div className="name">
+                <h4>{data.lists[id].label}</h4>
+                <h5>{data.lists[id].leader}</h5>
+              </div>
+              <div className="score">{`${Math.floor(approval * 100)}%`}</div>
+            </div>
+          </a>
+        ))}
       </div>
       <LogoURL className="logo" />
     </div>

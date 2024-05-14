@@ -1,6 +1,12 @@
 import fs from "fs";
 import { getVotes } from "./votes.js";
-import { lists, org_to_list, groups, deputes } from "./lists.js";
+import {
+  lists,
+  org_to_list,
+  groups,
+  deputes,
+  procedureTypes,
+} from "./lists.js";
 
 const dataset = {
   votes: await getVotes(),
@@ -8,6 +14,7 @@ const dataset = {
   lists,
   org_to_list,
   deputes,
+  procedureTypes,
 };
 
 fs.writeFileSync("../frontend/src/data.json", JSON.stringify(dataset));

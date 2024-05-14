@@ -421,6 +421,26 @@ body {
 }
 
 .About {
+  .socials {
+    display: flex;
+    gap: 1rem;
+
+    a {
+      background-color: var(--primary);
+      display: flex;
+      padding: 1rem;
+      border-radius: 1rem;
+
+      &:hover {
+        opacity: .8;
+      }
+
+      svg {
+        color: white;
+      }
+    }
+  }
+
   .Card {
     margin: 1rem;
     background-color: white;

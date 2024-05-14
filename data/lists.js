@@ -353,3 +353,27 @@ export const deputes = {
   250918: { o: ["5225"], g: ["5155"], l: "François THIOLLET" },
   251859: { o: ["6442"], g: ["5704"], l: "Guy LAVOCAT" },
 };
+
+export const procedureTypes = {
+  ACI: "Procédure d’accord interinstitutionnel",
+  APP: "Procédure de consentement",
+  AVC: "Procédure d’avis conforme du PE",
+  BUD: "Procédure budgétaire",
+  BUI: "Initiative budgétaire",
+  CNS: "Procédure de consultation",
+  COD: "Procédure législative",
+  COS: "Procédure sur un document de stratégie",
+  DCE: "Déclaration écrite",
+  DEA: "Actes délégués",
+  DEC: "Procédure de décharge",
+  GBD: "Procédure de gestion budgétaire",
+  IMM: "Immunité des députés",
+  INI: "Procédure d’initiative",
+  INL: "Procédure d’initiative législative",
+  INS: "Procédure institutionnelle",
+  NLE: "Lois non législatives",
+  REG: "Règlement du Parlement",
+  RPS: "Actes d’exécution",
+  RSO: "Organisation du Parlement",
+  RSP: "Résolution",
+};

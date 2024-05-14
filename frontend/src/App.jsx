@@ -47,7 +47,7 @@ import { theme } from "./theme";
 import html2canvas from "html2canvas";
 
 const minVotes = 5;
-const recommendedVotes = 20;
+const recommendedVotes = 30;
 const projectURL = "https://github.com/arnaudsm/votefinder.eu";
 
 const shuffle = (arr) => {
@@ -61,6 +61,24 @@ const shuffle = (arr) => {
 
 const vote_ids = shuffle(Object.keys(data.votes));
 
+const formatDate = (txt) => {
+  if (!txt) return "";
+  try {
+    return new Intl.DateTimeFormat("fr-FR", {
+      dateStyle: "long",
+    }).format(new Date(txt));
+  } catch (error) {
+    console.log(error);
+  }
+  return txt;
+};
+
+const getProcType = (proc_id) => {
+  if (!proc_id) return "";
+  const code = proc_id.slice(-4).slice(0, 3);
+  return data.procedureTypes[code] || "";
+};
+
 const Card = ({ vote_id }) => {
   const vote = data.votes[vote_id];
 
@@ -73,17 +91,22 @@ const Card = ({ vote_id }) => {
           <li>{vote.subtitle_2}</li>
         </ul>
       </div>
-      <Button
-        startIcon={<Add />}
-        className="more-info"
-        color="lightBlue"
-        variant="contained"
-        disableElevation
-        target="_blank"
-        href={vote.url}
-      >
-        PLUS D’INFOS
-      </Button>
+      <div className="bottom">
+        <div className="meta">
+          {formatDate(vote.date)} - {getProcType(vote.proc_id)}
+        </div>
+        <Button
+          startIcon={<Add />}
+          className="more-info"
+          color="lightBlue"
+          variant="contained"
+          disableElevation
+          target="_blank"
+          href={vote.summary_url}
+        >
+          PLUS D’INFOS
+        </Button>
+      </div>
     </div>
   );
 };
@@ -242,7 +265,7 @@ const Welcome = () => {
             <h2>Votez les textes du Parlement Européen ✉️</h2>
           </div>
           <div className="bottom">
-            <h2>Et découvrez quel parti vote comme vous✌️</h2>
+            <h2>Et découvrez quel parti a voté comme vous✌️</h2>
             <Button
               className="welcome-start"
               color="lightRed"
@@ -258,6 +281,9 @@ const Welcome = () => {
           </div>
         </div>
         <div className="footer">
+          Textes issus de la 9<sup>ème</sup> législature (2019-2024)
+          <br />
+          <br />
           VoteFinder est un projet bénévole, <br />
           <a href={projectURL} target="_blank">
             open-source
@@ -278,6 +304,9 @@ const VoteCard = ({ vote_id }) => {
   return (
     <>
       <div className="top">
+        <p>
+          {formatDate(vote.date)} - {getProcType(vote.proc_id)}
+        </p>
         <ul>
           <li>{vote.subtitle_1}</li>
           <li>{vote.subtitle_2}</li>
@@ -333,6 +362,7 @@ const VoteCard = ({ vote_id }) => {
         <ToggleButton value="0">Passer</ToggleButton>
         <ToggleButton value="+">👍 Pour</ToggleButton>
       </ToggleButtonGroup>
+
       <Button
         startIcon={<Add />}
         className="more-info"
@@ -340,7 +370,7 @@ const VoteCard = ({ vote_id }) => {
         variant="contained"
         disableElevation
         target="_blank"
-        href={vote.url}
+        href={vote.summary_url}
       >
         PLUS D’INFOS
       </Button>
@@ -374,7 +404,7 @@ const ResultsParVote = () => {
       ))}
       {choices.length == 0 && (
         <div className="list">
-          Réponds à plus de {minVotes} questions pour voir tes résultats!
+          Répondez à plus de {minVotes} questions pour voir vos résultats!
         </div>
       )}
     </div>
@@ -538,6 +568,21 @@ const About = ({ visible }) => {
           VoteFinder est un projet bénévole, <br />
           open-source, et sans tracking.
         </p>
+
+        <Button
+          startIcon={<PictureAsPdf />}
+          color="primary"
+          variant="contained"
+          size="large"
+          href="Communique-de-Presse-VoteFinder.eu.pdf"
+          disableElevation
+        >
+          communiqué de presse
+        </Button>
+        <p>
+          Vous voulez corriger une erreur ou rajouter un texte de loi ?<br />
+          Contactez-nous ou proposez une modification sur GitHub !
+        </p>
         <Button
           startIcon={<Email />}
           color="primary"
@@ -548,22 +593,6 @@ const About = ({ visible }) => {
         >
           nous contacter
         </Button>
-        {
-          <Button
-            startIcon={<PictureAsPdf />}
-            color="primary"
-            variant="contained"
-            size="large"
-            href="Communique-de-Presse-VoteFinder.eu.pdf"
-            disableElevation
-          >
-            communiqué de presse
-          </Button>
-        }
-        <p>
-          Vous voulez corriger une erreur ou rajouter un texte de loi? Rejoignez
-          notre GitHub !
-        </p>
         <Button
           startIcon={<GitHub />}
           color="primary"
@@ -573,7 +602,7 @@ const About = ({ visible }) => {
           href={projectURL}
           target="_blank"
         >
-          contribuer au projet
+          contribuer sur github
         </Button>
 
         <h2>Paramètres</h2>
@@ -586,6 +615,7 @@ const About = ({ visible }) => {
             if (!confirm("Voulez vous supprimer toutes vos données locales?"))
               return;
             context.setChoices({});
+            localStorage.setItem("votes", JSON.stringify({}));
             context.acceptWelcome(false);
             context.setTab(0);
           }}

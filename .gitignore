@@ -2,7 +2,7 @@ frontend/src/data.json
 dist
 legacy
 .env
-data/export_csv.js
+data/sync.js
 
 # Logs
 logs

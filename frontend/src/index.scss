@@ -171,9 +171,23 @@ body {
 
     .more-info {
       height: 2.5rem;
+      width: 100%;
 
       &:hover {
         opacity: .9;
+      }
+    }
+
+    .bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+
+      .meta {
+        opacity: .7;
+        text-align: center;
+        font-size: 14px;
       }
     }
   }

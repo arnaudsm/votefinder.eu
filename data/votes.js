@@ -76,6 +76,7 @@ export const getVotes = async () => {
 
     if (getApproval() > 96) console.log(file, getApproval());
     const date = vote.date.slice(0, 10);
+    delete data["vote_id"];
 
     output[vote_id] = { ...data, votes, date };
   }

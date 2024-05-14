@@ -411,6 +411,93 @@ body {
       }
     }
 
+    .liste-result {
+      background-color: #C2C2C2;
+      border-radius: 0.675rem;
+
+      box-shadow: $shadow;
+
+      .top {
+        display: flex;
+        height: 3.375rem;
+      }
+
+      &:hover {
+        opacity: .85;
+      }
+
+      img {
+        object-fit: contain;
+        background-color: white;
+        width: 3.375rem;
+        height: 3.375rem;
+        border-top-left-radius: 0.675rem;
+        border-bottom-left-radius: 0.675rem;
+      }
+
+      .progress {
+        height: 3.375rem;
+        border-radius: 0.675rem;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        overflow: hidden;
+        width: 100%;
+        position: relative;
+
+
+        @keyframes progress-bar {
+          0% {
+            width: 0%;
+          }
+        }
+
+
+        .bar {
+          background-color: var(--green);
+          transition: width 0.3s ease-in-out;
+          position: absolute;
+          display: block;
+          height: 3.375rem;
+          padding: 0;
+          margin: 0;
+          animation: progress-bar 0.3s;
+          animation-timing-function: ease-in-out;
+        }
+
+        .name {
+          left: 1rem;
+          color: white;
+          position: absolute;
+          display: flex;
+          flex-direction: column;
+          height: 3.375rem;
+          justify-content: center;
+
+          h4 {
+            margin: 0;
+            font-size: 1rem;
+            white-space: pre;
+          }
+
+          h5 {
+            margin: 0;
+            font-weight: normal;
+            font-size: 1rem;
+            white-space: pre;
+          }
+        }
+
+        .score {
+          color: white;
+          position: absolute;
+          right: 1rem;
+          line-height: 3.375rem;
+          font-weight: lighter;
+          font-size: 1.25rem;
+        }
+      }
+    }
+
     .reset {
       color: white;
       height: 3rem;
@@ -432,27 +519,12 @@ body {
   .socials {
     display: flex;
     gap: 1rem;
-
-    a {
-      background-color: var(--primary);
-      display: flex;
-      padding: 1rem;
-      border-radius: 1rem;
-
-      &:hover {
-        opacity: .8;
-      }
-
-      svg {
-        color: white;
-      }
-    }
   }
 
   .Card {
     margin: 1rem;
     background-color: white;
-    gap: 1rem;
+    gap: .75rem;
     border-radius: 1rem;
     padding: 0.5rem 1.5rem 1.5rem 1.5rem;
     text-align: center;

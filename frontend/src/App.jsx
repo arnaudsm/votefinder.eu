@@ -378,7 +378,7 @@ const ResultsParVoteEach = ({ vote_id }) => {
         exclusive
         fullWidth={true}
         onChange={(event) =>
-          context.choose({ vote_id, type: event.target.value })
+          context.choose({ vote_id, type: event.target.value, noPopup: true })
         }
       >
         <ToggleButton value="-">👎 Contre</ToggleButton>
@@ -836,11 +836,11 @@ function App() {
   const [started, setStarted] = useState(
     localStorage.getItem("started") == "y",
   );
-  const choose = ({ vote_id, type }) => {
+  const choose = ({ vote_id, type, noPopup }) => {
     setChoices((prevChoices) => {
       const newChoices = { ...prevChoices, [vote_id]: type };
       localStorage.setItem("votes", JSON.stringify(newChoices));
-      if (Object.keys(newChoices).length == recommendedVotes)
+      if (Object.keys(newChoices).length == recommendedVotes && !noPopup)
         setResultPopup(true);
       return newChoices;
     });

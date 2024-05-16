@@ -55,7 +55,7 @@ export const lists = {
   "new-10": {
     label: "Non à l’Europe capitaliste ",
     leader: "Olivier Terrien",
-    non_sortant: true,
+    no_data: true,
     program_url:
       "https://www.sitecommunistes.org/images/articles/2024/profession%20de%20foi.pdf",
   },
@@ -63,139 +63,139 @@ export const lists = {
     label:
       "Non à l'UE et à l'OTAN, communistes pour la paix et le progrès social",
     leader: "Charles Hoareau",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-12": {
     label: "Lutte ouvrière",
     leader: "Nathalie Arthaud",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-13": {
     label: "Pour un monde sans frontières ni patrons, urgence révolution !",
     leader: "Selma Labib",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-14": {
     label: "Pour le pain, la paix, la liberté !",
     leader: "Camille Adoue",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-15": {
     label: "Free Palestine",
     leader: "Nagib Azergui",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-16": {
     label: "PACE",
     leader: "Audric Alexandre",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-17": {
     label: "Nous le peuple",
     leader: "Georges Kuzmanovic",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-18": {
     label: "Équinoxe",
     leader: "Marine Cholley",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-19": {
     label: "Union pour une Europe arc-en-ciel",
     leader: "Thierry-Paul Valette",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-20": {
     label: "Europe Souveraine",
     leader: "Antonin Duarte",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-21": {
     label: "Écologie au centre",
     leader: "Jean-Marc Governatori",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-22": {
     label: "Écologie positive et Territoires",
     leader: "Yann Wehrling",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-23": {
     label: "L’Alliance rurale",
     leader: "Jean Lassalle",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-24": {
     label: "Parti fédéraliste",
     leader: "Yves Gernigon",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-25": {
     label: "Asselineau-Frexit",
     leader: "François Asselineau",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-26": {
     label: "Les Patriotes",
     leader: "Florian Philippot",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-27": {
     label: "Une France royale au coeur de l'Europe",
     leader: "Inconnu",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-28": {
     label: "Forteresse Europe",
     leader: "Pierre-Marie Bonneau",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-29": {
     label: "France Libre",
     leader: "Francis Lalanne",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-30": {
     label: "Parti animaliste",
     leader: "Hélène Thouy",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-31": {
     label: "Parti pirate",
     leader: "Caroline Zorn",
-    non_sortant: true,
-    program_url: "",
+    etranger: true,
+    program_url: "https://partipirate.org/program",
   },
   "new-32": {
     label: "Espéranto langue commune",
     leader: "Laure Patas d'Illiers",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
   "new-33": {
     label: "Défendre les enfants",
     leader: "Gaël Coste-Meunier",
-    non_sortant: true,
+    no_data: true,
     program_url: "",
   },
 };
@@ -219,6 +219,8 @@ export const org_to_list = {
   6430: "new-0", // Horizons                           -> Besoin d’Europe
   6049: "new-7", // Gauche républicaine et socialiste  -> La gauche unie pour le monde du travail
   5225: "new-2", // Europe Écologie                    -> Europe Écologie
+  5367: "new-31", //Parti Pirate Allemand              -> Parti Pirate
+  5524: "new-31", //Parti Pirate CZ                    -> Parti Pirate
 };
 
 export const groups = {
@@ -352,6 +354,12 @@ export const deputes = {
   249285: { o: ["5582"], g: ["5155"], l: "Lydie MASSARD" },
   250918: { o: ["5225"], g: ["5155"], l: "François THIOLLET" },
   251859: { o: ["6442"], g: ["5704"], l: "Guy LAVOCAT" },
+  // Députés Etrangers pour représenter les petits partis
+  // non-représentés en france
+  197431: { hide: true, o: ["5367"], g: ["5155"], l: "Patrick BREYER" },
+  197539: { hide: true, o: ["5524"], g: ["5155"], l: "Mikuláš PEKSA" },
+  197546: { hide: true, o: ["5524"], g: ["5155"], l: "Marcel KOLAJA" },
+  197549: { hide: true, o: ["5524"], g: ["5155"], l: "Markéta GREGOROVÁ" },
 };
 
 export const procedureTypes = {

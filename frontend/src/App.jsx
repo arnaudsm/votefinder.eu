@@ -483,7 +483,8 @@ const ResultListe = ({ id, approval }) => {
             <h5>{data.lists[id].leader}</h5>
           </div>
           <div className="score">
-            {data.lists[id].non_sortant
+            {data.lists[id].etranger ? "* " : ""}
+            {data.lists[id].no_data
               ? "Non Sortant"
               : `${Math.floor(approval * 100)}%`}
           </div>
@@ -494,7 +495,13 @@ const ResultListe = ({ id, approval }) => {
 };
 const ResultsListes = ({ results }) => (
   <div className="list">
-    <div className="explanation">Pourcentage d’accord avec les listes 2024</div>
+    <div className="explanation">
+      Pourcentage d’accord avec les listes 2024.
+      <br />
+      <sub>
+        * : extrapolé sur les députés étrangers par manque de député francais
+      </sub>
+    </div>
     {results.lists.map(([id, approval]) => (
       <ResultListe id={id} approval={approval} key={id} />
     ))}
@@ -539,26 +546,28 @@ const ResultsDeputes = ({ results }) => {
       <div className="explanation">
         Pourcentage d’accord avec les député français sortants
       </div>
-      {results.deputes.map(([id, approval]) => (
-        <a
-          className="result"
-          href={`https://www.europarl.europa.eu/meps/fr/${id}`}
-          key={id}
-          target="_blank"
-        >
-          <img src={`/deputes/${id}.jpg`} alt={data.deputes[id]?.l} />
-          <div className="progress">
-            <div
-              className="bar"
-              style={{ width: `${Math.floor(approval * 100)}%` }}
-            ></div>
-            <div className="name">
-              <h4>{data.deputes[id]?.l}</h4>
+      {results.deputes
+        .filter(([id]) => !data.deputes[id]?.hide)
+        .map(([id, approval]) => (
+          <a
+            className="result"
+            href={`https://www.europarl.europa.eu/meps/fr/${id}`}
+            key={id}
+            target="_blank"
+          >
+            <img src={`/deputes/${id}.jpg`} alt={data.deputes[id]?.l} />
+            <div className="progress">
+              <div
+                className="bar"
+                style={{ width: `${Math.floor(approval * 100)}%` }}
+              ></div>
+              <div className="name">
+                <h4>{data.deputes[id]?.l}</h4>
+              </div>
+              <div className="score">{`${Math.floor(approval * 100)}%`}</div>
             </div>
-            <div className="score">{`${Math.floor(approval * 100)}%`}</div>
-          </div>
-        </a>
-      ))}
+          </a>
+        ))}
     </div>
   );
 };

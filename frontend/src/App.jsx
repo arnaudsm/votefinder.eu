@@ -308,10 +308,12 @@ const Welcome = () => {
           </div>
         </div>
         <div className="footer">
-          Textes issus de la 9<sup>ème</sup> législature (2019-2024)
+          Textes issus de la 9<sup>ème</sup> législature (2019-2024).
+          <br />
+          Résumés non-exhaustifs, lisez les Débats pour plus de contexte !
           <br />
           <br />
-          VoteFinder est un projet bénévole, <br />
+          VoteFinder est un projet bénévole,{" "}
           <a href={projectURL} target="_blank">
             open-source
           </a>
@@ -711,6 +713,13 @@ const About = ({ visible }) => {
             startIcon={<Instagram />}
           >
             instagram
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            href="https://www.tiktok.com/@votefinder.eu"
+          >
+            TikTok
           </Button>
         </div>
 

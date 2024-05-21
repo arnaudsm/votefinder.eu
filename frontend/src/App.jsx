@@ -38,8 +38,8 @@ import {
   Article,
   QuestionAnswer,
 } from "@mui/icons-material";
-import Logo from "./icons/logo.svg";
-import LogoURL from "./icons/logo_url.svg";
+import LogoSharing from "./icons/logo_url.svg";
+import LogoURL from "./icons/logo_url_2.svg";
 import Pour from "./icons/pour.svg";
 import EuLogo from "./icons/eu.svg";
 import Contre from "./icons/contre.svg";
@@ -275,7 +275,7 @@ const Votes = ({ visible }) => {
 const Navbar = () => (
   <AppBar position="static" color="inherit" className="Navbar">
     <Toolbar color="white">
-      <Logo className="logo" />
+      <LogoURL className="logo" />
     </Toolbar>
   </AppBar>
 );
@@ -837,7 +837,7 @@ const SharePopup = () => {
           </a>
         ))}
       </div>
-      <LogoURL className="logo" />
+      <LogoSharing className="logo" />
     </div>
   );
 };

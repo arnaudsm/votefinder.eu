@@ -184,7 +184,7 @@ export const lists = {
     label: "Parti pirate",
     leader: "Caroline Zorn",
     etranger: true,
-    program_url: "https://partipirate.org/program",
+    program_url: "https://europeennes.partipirate.org/programme.html",
   },
   "new-32": {
     label: "Espéranto langue commune",

@@ -44,6 +44,10 @@ body {
 
 .logo {
   height: 2.625rem;
+
+  &:hover {
+    opacity: .85;
+  }
 }
 
 .content {

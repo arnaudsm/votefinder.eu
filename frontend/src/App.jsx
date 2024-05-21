@@ -275,7 +275,9 @@ const Votes = ({ visible }) => {
 const Navbar = () => (
   <AppBar position="static" color="inherit" className="Navbar">
     <Toolbar color="white">
-      <LogoURL className="logo" />
+      <a href="https://votefinder.eu">
+        <LogoURL className="logo" />
+      </a>
     </Toolbar>
   </AppBar>
 );

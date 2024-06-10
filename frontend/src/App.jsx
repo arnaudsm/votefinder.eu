@@ -305,7 +305,7 @@ const Welcome = () => {
                 context.setStarted(true);
               }}
             >
-              Test européennes 🇪🇺
+              Quizz Européennes 🇪🇺
             </Button>
             <Button
               className="welcome-start euro"
@@ -314,7 +314,7 @@ const Welcome = () => {
               disableElevation
               href="https://votefinder.fr/"
             >
-              Test Législatives 🇫🇷
+              Quizz Législatives 🇫🇷
             </Button>
           </div>
         </div>

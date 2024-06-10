@@ -305,10 +305,20 @@ const Welcome = () => {
                 context.setStarted(true);
               }}
             >
-              Commencer
+              Test européennes 🇪🇺
+            </Button>
+            <Button
+              className="welcome-start euro"
+              color="lightRed"
+              variant="contained"
+              disableElevation
+              href="https://votefinder.fr/"
+            >
+              Test Législatives 🇫🇷
             </Button>
           </div>
         </div>
+
         <div className="footer">
           Textes issus de la 9<sup>ème</sup> législature (2019-2024).
           <br />
@@ -677,6 +687,14 @@ const About = ({ visible }) => {
           target="_blank"
         >
           contribuer sur github
+        </Button>
+        <Button
+          color="primary"
+          variant="contained"
+          size="large"
+          href="https://votefinder.fr"
+        >
+          VoteFinder Législatives
         </Button>
 
         <h2>Paramètres</h2>

@@ -281,6 +281,10 @@ body {
         font-size: 1.25rem;
         width: 100%;
 
+        &.euro {
+          margin-top: 1rem;
+        }
+
         &:hover {
           opacity: .9;
         }
